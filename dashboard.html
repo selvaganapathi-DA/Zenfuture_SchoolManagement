@@ -1,0 +1,427 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#f0f4ff;--sidebar:#1a2b6b;--sidebar-hover:rgba(255,255,255,.1);--sidebar-active:rgba(255,255,255,.18);--card:#ffffffcc;--card-solid:#fff;--card-border:rgba(99,130,255,.15);--primary:#2563eb;--primary-light:#eff4ff;--primary-hover:#1d4ed8;--text:#1e2d60;--text2:#5a6ea0;--text3:#8fa0c8;--green:#16a34a;--green-bg:#dcfce7;--amber:#d97706;--amber-bg:#fef3c7;--red:#dc2626;--red-bg:#fee2e2;--purple:#7c3aed;--purple-bg:#ede9fe;--shadow:0 2px 16px rgba(37,99,235,.08);--shadow-lg:0 8px 32px rgba(37,99,235,.13);--radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--text);
+    --card:#ffffffcc;--card-border:rgba(99,130,255,.15);--primary:#2563eb;--primary-light:#eff4ff;
+    --text:#1e2d60;--text2:#5a6ea0;--text3:#8fa0c8;
+    --green:#16a34a;--green-bg:#dcfce7;--amber:#d97706;--amber-bg:#fef3c7;
+    --red:#dc2626;--red-bg:#fee2e2;--purple:#7c3aed;--purple-bg:#ede9fe;
+    --shadow:0 2px 16px rgba(37,99,235,.08);--shadow-lg:0 8px 32px rgba(37,99,235,.13);
+    font-family:'Plus Jakarta Sans',sans-serif;
+  }
+  .dark-mode{
+    --bg:#0f1729;--sidebar:#0a1128;--card:#1e2d5ecc;--card-border:rgba(99,130,255,.2);
+    --text:#e2e8ff;--text2:#8fa0c8;--text3:#4a5a88;
+    --primary-light:#1e2d5e;--shadow:0 2px 16px rgba(0,0,0,.3);--shadow-lg:0 8px 32px rgba(0,0,0,.4);
+  }
+  body{background:var(--bg);color:var(--text);min-height:100vh}
+  .layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+  .sidebar{background:var(--sidebar);display:flex;flex-direction:column;padding:0 0 16px}
+  .logo-area{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:8px}
+  .logo{display:flex;align-items:center;gap:10px}
+  .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#60a5fa,#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff}
+  .logo-text{color:#fff;font-size:15px;font-weight:700;letter-spacing:-.3px}
+  .logo-sub{color:rgba(255,255,255,.45);font-size:11px;font-weight:400}
+  .nav-section{padding:0 12px;margin-bottom:4px}
+  .nav-label{color:rgba(255,255,255,.3);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:12px 8px 4px}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;transition:background .15s;color:rgba(255,255,255,.65);font-size:13px;font-weight:500;margin-bottom:1px;text-decoration:none}
+  .nav-item:hover{background:var(--sidebar-hover);color:#fff}
+  .nav-item.active{background:var(--sidebar-active);color:#fff}
+  .nav-item i{font-size:17px;width:20px;text-align:center}
+  .badge{background:rgba(96,165,250,.25);color:#93c5fd;font-size:10px;font-weight:700;padding:2px 6px;border-radius:20px;margin-left:auto}
+  .sidebar-footer{margin-top:auto;padding:12px}
+  .user-card{background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer}
+  .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:700;flex-shrink:0}
+  .user-name{color:#fff;font-size:13px;font-weight:600}
+  .user-role{color:rgba(255,255,255,.4);font-size:11px}
+  .main{display:flex;flex-direction:column;overflow:hidden}
+  .topbar{background:var(--card);border-bottom:1px solid var(--card-border);padding:0 24px;height:60px;display:flex;align-items:center;gap:16px;backdrop-filter:blur(12px);position:sticky;top:0;z-index:10}
+  .topbar-title{font-size:16px;font-weight:700;color:var(--text);margin-right:auto}
+  .search-box{display:flex;align-items:center;gap:8px;background:var(--primary-light);border:1px solid var(--card-border);border-radius:8px;padding:6px 12px;color:var(--text2);font-size:13px;width:200px}
+  .search-box i{font-size:15px;color:var(--text3)}
+  .topbar-actions{display:flex;align-items:center;gap:8px}
+  .icon-btn{width:36px;height:36px;border-radius:9px;background:var(--primary-light);border:1px solid var(--card-border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);position:relative;transition:background .15s}
+  .icon-btn:hover{background:var(--card-border)}
+  .notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:#ef4444;border:2px solid var(--bg)}
+  .topbar-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:700;cursor:pointer}
+  .dark-toggle{background:var(--primary-light);border:1px solid var(--card-border);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:6px}
+  .content{padding:20px 24px;display:flex;flex-direction:column;gap:20px}
+  .page-header{display:flex;align-items:center;justify-content:space-between}
+  .page-title{font-size:20px;font-weight:700;color:var(--text)}
+  .page-sub{font-size:13px;color:var(--text2);margin-top:2px}
+  .date-badge{background:var(--primary-light);border:1px solid var(--card-border);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;color:var(--primary);display:flex;align-items:center;gap:6px}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:18px;backdrop-filter:blur(12px);box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s;cursor:pointer}
+  .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+  .stat-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+  .stat-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px}
+  .si-blue{background:#dbeafe;color:#1d4ed8}
+  .si-green{background:var(--green-bg);color:var(--green)}
+  .si-amber{background:var(--amber-bg);color:var(--amber)}
+  .si-purple{background:var(--purple-bg);color:var(--purple)}
+  .stat-trend{font-size:11px;font-weight:700;padding:3px 7px;border-radius:6px;display:flex;align-items:center;gap:3px}
+  .trend-up{background:var(--green-bg);color:var(--green)}
+  .trend-down{background:var(--red-bg);color:var(--red)}
+  .stat-num{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-1px}
+  .stat-label{font-size:12px;font-weight:500;color:var(--text2);margin-top:3px}
+  .stat-sub{font-size:11px;color:var(--text3);margin-top:2px}
+  .mid-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:14px}
+  .card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:18px;backdrop-filter:blur(12px);box-shadow:var(--shadow)}
+  .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .card-title{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:7px}
+  .card-title i{font-size:16px;color:var(--primary)}
+  .card-action{font-size:12px;font-weight:600;color:var(--primary);cursor:pointer}
+  .bottom-grid{display:grid;grid-template-columns:1.8fr 1fr 1fr;gap:14px}
+  .table-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  thead tr{border-bottom:1px solid var(--card-border)}
+  th{padding:8px 10px;text-align:left;color:var(--text2);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+  td{padding:9px 10px;color:var(--text);border-bottom:1px solid rgba(99,130,255,.06)}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--primary-light)}
+  .stu-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+  .stu-name-cell{display:flex;align-items:center;gap:8px}
+  .pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700}
+  .pill-green{background:var(--green-bg);color:var(--green)}
+  .pill-amber{background:var(--amber-bg);color:var(--amber)}
+  .pill-red{background:var(--red-bg);color:var(--red)}
+  .pill-blue{background:#dbeafe;color:#1d4ed8}
+  .notice-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid rgba(99,130,255,.07)}
+  .notice-item:last-child{border-bottom:none}
+  .notice-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+  .notice-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+  .notice-date{font-size:11px;color:var(--text3)}
+  .exam-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(99,130,255,.07)}
+  .exam-item:last-child{border-bottom:none}
+  .exam-date-box{background:var(--primary-light);border:1px solid var(--card-border);border-radius:8px;padding:4px 8px;text-align:center;min-width:40px}
+  .exam-day{font-size:16px;font-weight:800;color:var(--primary);line-height:1}
+  .exam-mon{font-size:10px;color:var(--text2);font-weight:600;text-transform:uppercase}
+  .exam-name{font-size:13px;font-weight:600;color:var(--text)}
+  .exam-meta{font-size:11px;color:var(--text3)}
+  .att-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .att-bar-label{font-size:12px;color:var(--text2);width:30px;text-align:right;flex-shrink:0}
+  .att-bar-outer{flex:1;height:8px;border-radius:4px;background:rgba(99,130,255,.1);overflow:hidden}
+  .att-bar-fill{height:100%;border-radius:4px;transition:width .5s ease}
+  .att-bar-val{font-size:11px;color:var(--text2);width:36px;text-align:right;flex-shrink:0}
+  .mini-calendar{display:flex;flex-direction:column;gap:4px}
+  .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .cal-month{font-size:13px;font-weight:700;color:var(--text)}
+  .cal-nav{display:flex;gap:4px}
+  .cal-nav-btn{width:24px;height:24px;border-radius:6px;background:var(--primary-light);border:1px solid var(--card-border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:13px}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+  .cal-dow{font-size:10px;font-weight:700;color:var(--text3);padding:3px 0;text-transform:uppercase}
+  .cal-day{font-size:12px;padding:5px 3px;border-radius:7px;cursor:pointer;color:var(--text2);transition:background .12s}
+  .cal-day:hover{background:var(--primary-light)}
+  .cal-today{background:var(--primary);color:#fff;font-weight:700}
+  .cal-today:hover{background:var(--primary)}
+  .cal-event{background:rgba(96,165,250,.15);color:var(--primary);font-weight:600}
+  .cal-empty{color:transparent;pointer-events:none}
+</style>
+
+</head>
+<body>
+<div class="layout" id="app">
+  <aside class="sidebar">
+    <div class="logo-area">
+      <div class="logo">
+        <div class="logo-icon"><i class="ti ti-school"></i></div>
+        <div><div class="logo-text">Zenfuture</div><div class="logo-sub">School Management</div></div>
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Main</div>
+      <a class="nav-item active" href="dashboard.html"><i class="ti ti-layout-dashboard"></i>Dashboard</a>
+      <a class="nav-item" href="students.html"><i class="ti ti-users"></i>Students<span class="badge">1,284</span></a>
+      <a class="nav-item" href="teachers.html"><i class="ti ti-user-circle"></i>Teachers</a>
+      <a class="nav-item" href="attendance.html"><i class="ti ti-calendar-event"></i>Attendance</a>
+      <a class="nav-item" href="exams.html"><i class="ti ti-file-text"></i>Exams<span class="badge">3</span></a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Operations</div>
+      <a class="nav-item" href="fees.html"><i class="ti ti-credit-card"></i>Fees</a>
+      <a class="nav-item" href="transport.html"><i class="ti ti-bus"></i>Transport</a>
+      <a class="nav-item" href="hostel.html"><i class="ti ti-building-community"></i>Hostel</a>
+      <a class="nav-item" href="library.html"><i class="ti ti-books"></i>Library</a>
+      <a class="nav-item" href="payroll.html"><i class="ti ti-cash-banknote"></i>Payroll</a><a class="nav-item" href="expenses.html"><i class="ti ti-receipt-2"></i>Expenses</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Intelligence</div>
+      <a class="nav-item" href="notices.html"><i class="ti ti-bell"></i>Notices<span class="badge">5</span></a>
+      <a class="nav-item" href="reports.html"><i class="ti ti-chart-bar"></i>Reports</a>
+      <a class="nav-item" href="ai-analytics.html"><i class="ti ti-brain"></i>AI Analytics</a>
+      <a class="nav-item" href="whatsapp-center.html"><i class="ti ti-brand-whatsapp"></i>WhatsApp Center</a>
+      <a class="nav-item" href="mobile-apps.html"><i class="ti ti-device-mobile"></i>Mobile Apps</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">System</div>
+      <a class="nav-item" href="modules.html"><i class="ti ti-layout-list"></i>Modules</a>
+      <a class="nav-item" href="settings.html"><i class="ti ti-settings"></i>Settings</a>
+      <a class="nav-item" href="#"><i class="ti ti-help-circle"></i>Help & Support</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="avatar-sm avatar">ZF</div>
+        <div><div class="user-name">Zenfuture</div><div class="user-role">Principal</div></div>
+        <i class="ti ti-dots-vertical" style="color:rgba(255,255,255,.3);font-size:16px;margin-left:auto"></i>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <nav class="topbar">
+      <span class="topbar-title">Dashboard</span>
+      <div class="search-box"><i class="ti ti-search" aria-hidden="true"></i><span style="color:var(--text3)">Search students, classes...</span></div>
+      <div class="topbar-actions">
+        <button class="dark-toggle" onclick="toggleDark()" aria-label="Toggle dark mode"><i class="ti ti-moon" aria-hidden="true"></i>Dark</button>
+        <div class="icon-btn" aria-label="Messages"><i class="ti ti-message-circle" style="font-size:18px" aria-hidden="true"></i></div>
+        <div class="icon-btn" aria-label="Notifications"><i class="ti ti-bell" style="font-size:18px" aria-hidden="true"></i><span class="notif-dot"></span></div>
+        <div class="topbar-avatar" aria-label="Profile">ZF</div>
+      </div>
+    </nav>
+
+    <div class="content">
+      <div class="page-header">
+        <div><div class="page-title">Good morning</div><div class="page-sub">Here's what's happening at Zenfuture School today.</div></div>
+        <div class="date-badge"><i class="ti ti-calendar" aria-hidden="true"></i>Friday, 12 May 2026</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon si-blue"><i class="ti ti-users" aria-hidden="true"></i></div>
+            <div class="stat-trend trend-up"><i class="ti ti-trending-up" aria-hidden="true"></i>+4.2%</div>
+          </div>
+          <div class="stat-num">1,284</div>
+          <div class="stat-label">Total students</div>
+          <div class="stat-sub">32 enrolled this month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon si-green"><i class="ti ti-user-check" aria-hidden="true"></i></div>
+            <div class="stat-trend trend-up"><i class="ti ti-trending-up" aria-hidden="true"></i>+2.1%</div>
+          </div>
+          <div class="stat-num">86</div>
+          <div class="stat-label">Total teachers</div>
+          <div class="stat-sub">4 on leave today</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon si-amber"><i class="ti ti-cash" aria-hidden="true"></i></div>
+            <div class="stat-trend trend-up"><i class="ti ti-trending-up" aria-hidden="true"></i>+12%</div>
+          </div>
+          <div class="stat-num">₹18.4L</div>
+          <div class="stat-label">Fee collected</div>
+          <div class="stat-sub">₹2.6L pending</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon si-purple"><i class="ti ti-check" aria-hidden="true"></i></div>
+            <div class="stat-trend trend-down"><i class="ti ti-trending-down" aria-hidden="true"></i>-1.3%</div>
+          </div>
+          <div class="stat-num">91.8%</div>
+          <div class="stat-label">Attendance today</div>
+          <div class="stat-sub">1,179 / 1,284 present</div>
+        </div>
+      </div>
+
+      <div class="mid-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="ti ti-chart-line" aria-hidden="true"></i>Performance overview</div>
+            <span class="card-action">View details</span>
+          </div>
+          <div style="position:relative;height:200px"><canvas id="perfChart" role="img" aria-label="Monthly performance chart for students and attendance over 6 months">Performance data: Science 82, Maths 75, English 88.</canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="ti ti-chart-donut" aria-hidden="true"></i>Grade distribution</div>
+          </div>
+          <div style="position:relative;height:160px;margin-bottom:8px"><canvas id="gradeChart" role="img" aria-label="Grade distribution pie chart">A: 34%, B: 28%, C: 22%, D: 11%, F: 5%</canvas></div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px 14px;font-size:11.5px;color:var(--text2)">
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#2563eb;display:inline-block"></span>Grade A 34%</span>
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#16a34a;display:inline-block"></span>Grade B 28%</span>
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#d97706;display:inline-block"></span>Grade C 22%</span>
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#9333ea;display:inline-block"></span>Grade D 11%</span>
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#dc2626;display:inline-block"></span>Grade F 5%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mid-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="ti ti-chart-bar" aria-hidden="true"></i>Weekly attendance</div>
+            <span class="card-action">Full report</span>
+          </div>
+          <div style="margin-bottom:12px">
+            <div class="att-bar-row"><span class="att-bar-label">Mon</span><div class="att-bar-outer"><div class="att-bar-fill" style="width:96%;background:#2563eb"></div></div><span class="att-bar-val">96%</span></div>
+            <div class="att-bar-row"><span class="att-bar-label">Tue</span><div class="att-bar-outer"><div class="att-bar-fill" style="width:94%;background:#2563eb"></div></div><span class="att-bar-val">94%</span></div>
+            <div class="att-bar-row"><span class="att-bar-label">Wed</span><div class="att-bar-outer"><div class="att-bar-fill" style="width:89%;background:#d97706"></div></div><span class="att-bar-val">89%</span></div>
+            <div class="att-bar-row"><span class="att-bar-label">Thu</span><div class="att-bar-outer"><div class="att-bar-fill" style="width:93%;background:#2563eb"></div></div><span class="att-bar-val">93%</span></div>
+            <div class="att-bar-row"><span class="att-bar-label">Fri</span><div class="att-bar-outer"><div class="att-bar-fill" style="width:91%;background:#2563eb"></div></div><span class="att-bar-val">91%</span></div>
+          </div>
+          <div style="position:relative;height:150px"><canvas id="attChart" role="img" aria-label="Monthly attendance trend line chart">Attendance trend over 6 months.</canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="ti ti-calendar" aria-hidden="true"></i>May 2026</div>
+            <div class="cal-nav">
+              <div class="cal-nav-btn"><i class="ti ti-chevron-left" aria-hidden="true"></i></div>
+              <div class="cal-nav-btn"><i class="ti ti-chevron-right" aria-hidden="true"></i></div>
+            </div>
+          </div>
+          <div class="mini-calendar">
+            <div class="cal-grid">
+              <div class="cal-dow">Su</div><div class="cal-dow">Mo</div><div class="cal-dow">Tu</div><div class="cal-dow">We</div><div class="cal-dow">Th</div><div class="cal-dow">Fr</div><div class="cal-dow">Sa</div>
+              <div class="cal-day cal-empty"></div><div class="cal-day cal-empty"></div><div class="cal-day cal-empty"></div><div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div>
+              <div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day cal-today">8</div><div class="cal-day cal-event">9</div><div class="cal-day">10</div><div class="cal-day">11</div>
+              <div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day cal-event">14</div><div class="cal-day">15</div><div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div>
+              <div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day cal-event">21</div><div class="cal-day">22</div><div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div>
+              <div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day cal-event">29</div><div class="cal-day">30</div><div class="cal-day">31</div><div class="cal-day cal-empty"></div>
+            </div>
+          </div>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text2)"><span style="width:7px;height:7px;border-radius:50%;background:#2563eb;display:inline-block"></span>9 May - Science Olympiad</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text2)"><span style="width:7px;height:7px;border-radius:50%;background:#d97706;display:inline-block"></span>14 May - Mid-term exams start</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text2)"><span style="width:7px;height:7px;border-radius:50%;background:#7c3aed;display:inline-block"></span>29 May - Annual sports day</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="ti ti-users" aria-hidden="true"></i>Recent students</div>
+            <span class="card-action">View all</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Student</th><th>Class</th><th>Roll</th><th>Attendance</th><th>Grade</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><div class="stu-name-cell"><div class="stu-avatar" style="background:#3b82f6">AK</div><div><div style="font-weight:600">Aryan Kapoor</div><div style="font-size:11px;color:var(--text3)">aryan.k@school.in</div></div></div></td><td>X-A</td><td>1042</td><td>94%</td><td><span class="pill pill-green">A+</span></td><td><span class="pill pill-green">Active</span></td></tr>
+                <tr><td><div class="stu-name-cell"><div class="stu-avatar" style="background:#8b5cf6">SM</div><div><div style="font-weight:600">Sneha Mehta</div><div style="font-size:11px;color:var(--text3)">sneha.m@school.in</div></div></div></td><td>IX-B</td><td>0987</td><td>88%</td><td><span class="pill pill-blue">B+</span></td><td><span class="pill pill-green">Active</span></td></tr>
+                <tr><td><div class="stu-name-cell"><div class="stu-avatar" style="background:#f59e0b">RN</div><div><div style="font-weight:600">Rohan Nair</div><div style="font-size:11px;color:var(--text3)">rohan.n@school.in</div></div></div></td><td>XI-C</td><td>1158</td><td>76%</td><td><span class="pill pill-amber">C</span></td><td><span class="pill pill-amber">Warning</span></td></tr>
+                <tr><td><div class="stu-name-cell"><div class="stu-avatar" style="background:#10b981">PJ</div><div><div style="font-weight:600">Pooja Joshi</div><div style="font-size:11px;color:var(--text3)">pooja.j@school.in</div></div></div></td><td>VIII-A</td><td>0834</td><td>97%</td><td><span class="pill pill-green">A+</span></td><td><span class="pill pill-green">Active</span></td></tr>
+                <tr><td><div class="stu-name-cell"><div class="stu-avatar" style="background:#ef4444">KS</div><div><div style="font-weight:600">Karan Singh</div><div style="font-size:11px;color:var(--text3)">karan.s@school.in</div></div></div></td><td>XII-B</td><td>1301</td><td>63%</td><td><span class="pill pill-red">D</span></td><td><span class="pill pill-red">At risk</span></td></tr>
+                <tr><td><div class="stu-name-cell"><div class="stu-avatar" style="background:#6366f1">DA</div><div><div style="font-weight:600">Divya Anand</div><div style="font-size:11px;color:var(--text3)">divya.a@school.in</div></div></div></td><td>X-B</td><td>1067</td><td>91%</td><td><span class="pill pill-blue">B+</span></td><td><span class="pill pill-green">Active</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="ti ti-file-text" aria-hidden="true"></i>Upcoming exams</div>
+            <span class="card-action">Schedule</span>
+          </div>
+          <div>
+            <div class="exam-item">
+              <div class="exam-date-box"><div class="exam-day">14</div><div class="exam-mon">May</div></div>
+              <div><div class="exam-name">Mathematics - X</div><div class="exam-meta">09:00 AM - Hall A</div></div>
+            </div>
+            <div class="exam-item">
+              <div class="exam-date-box"><div class="exam-day">16</div><div class="exam-mon">May</div></div>
+              <div><div class="exam-name">Science - IX</div><div class="exam-meta">10:00 AM - Hall B</div></div>
+            </div>
+            <div class="exam-item">
+              <div class="exam-date-box"><div class="exam-day">19</div><div class="exam-mon">May</div></div>
+              <div><div class="exam-name">English - XI</div><div class="exam-meta">09:30 AM - Hall C</div></div>
+            </div>
+            <div class="exam-item">
+              <div class="exam-date-box"><div class="exam-day">21</div><div class="exam-mon">May</div></div>
+              <div><div class="exam-name">History - VIII</div><div class="exam-meta">11:00 AM - Hall A</div></div>
+            </div>
+            <div class="exam-item">
+              <div class="exam-date-box"><div class="exam-day">23</div><div class="exam-mon">May</div></div>
+              <div><div class="exam-name">Chemistry - XII</div><div class="exam-meta">09:00 AM - Lab 1</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="ti ti-bell" aria-hidden="true"></i>Recent notices</div>
+            <span class="card-action">All</span>
+          </div>
+          <div>
+            <div class="notice-item">
+              <div class="notice-dot" style="background:#2563eb"></div>
+              <div><div class="notice-title">Science Olympiad registration open</div><div class="notice-date">8 May 2026</div></div>
+            </div>
+            <div class="notice-item">
+              <div class="notice-dot" style="background:#d97706"></div>
+              <div><div class="notice-title">Fee payment deadline - 15 May</div><div class="notice-date">7 May 2026</div></div>
+            </div>
+            <div class="notice-item">
+              <div class="notice-dot" style="background:#16a34a"></div>
+              <div><div class="notice-title">Annual sports day - 29 May</div><div class="notice-date">6 May 2026</div></div>
+            </div>
+            <div class="notice-item">
+              <div class="notice-dot" style="background:#7c3aed"></div>
+              <div><div class="notice-title">PTM scheduled for 31 May</div><div class="notice-date">5 May 2026</div></div>
+            </div>
+            <div class="notice-item">
+              <div class="notice-dot" style="background:#dc2626"></div>
+              <div><div class="notice-title">Library books return reminder</div><div class="notice-date">4 May 2026</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+function toggleDark(){document.getElementById('app').classList.toggle('dark-mode')}
+
+const months=['Nov','Dec','Jan','Feb','Mar','Apr'];
+
+new Chart(document.getElementById('perfChart'),{
+  type:'line',
+  data:{
+    labels:months,
+    datasets:[
+      {label:'Avg score',data:[74,76,78,80,79,82],borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,.08)',tension:.4,fill:true,borderWidth:2,pointRadius:4,pointBackgroundColor:'#2563eb',borderDash:[]},
+      {label:'Pass rate %',data:[88,90,91,93,90,94],borderColor:'#16a34a',backgroundColor:'rgba(22,163,74,.06)',tension:.4,fill:true,borderWidth:2,pointRadius:4,pointBackgroundColor:'#16a34a',borderDash:[5,3]}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#8fa0c8',font:{size:11}}},y:{grid:{color:'rgba(99,130,255,.08)'},ticks:{color:'#8fa0c8',font:{size:11}},min:60,max:100}}}
+});
+
+new Chart(document.getElementById('gradeChart'),{
+  type:'doughnut',
+  data:{
+    labels:['A','B','C','D','F'],
+    datasets:[{data:[34,28,22,11,5],backgroundColor:['#2563eb','#16a34a','#d97706','#9333ea','#dc2626'],borderWidth:0,hoverOffset:4}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{display:false}}}
+});
+
+new Chart(document.getElementById('attChart'),{
+  type:'bar',
+  data:{
+    labels:months,
+    datasets:[{label:'Attendance %',data:[95,94,92,93,91,92],backgroundColor:'rgba(37,99,235,.15)',borderColor:'#2563eb',borderWidth:1.5,borderRadius:5,hoverBackgroundColor:'rgba(37,99,235,.35)'}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#8fa0c8',font:{size:11}}},y:{grid:{color:'rgba(99,130,255,.08)'},ticks:{color:'#8fa0c8',font:{size:11}},min:80,max:100}}}
+});
+</script>
+</body>
+</html>
+
+
+
+
+
+

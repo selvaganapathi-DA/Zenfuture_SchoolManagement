@@ -1,0 +1,419 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fee Collection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;--sidebar:#1a2b6b;--sidebar-hover:rgba(255,255,255,.1);--sidebar-active:rgba(255,255,255,.18);
+  --card:#ffffffcc;--card-solid:#ffffff;--card-border:rgba(99,130,255,.15);
+  --primary:#2563eb;--primary-light:#eff4ff;--primary-hover:#1d4ed8;
+  --text:#1e2d60;--text2:#5a6ea0;--text3:#8fa0c8;
+  --green:#16a34a;--green-bg:#dcfce7;--amber:#d97706;--amber-bg:#fef3c7;
+  --red:#dc2626;--red-bg:#fee2e2;--purple:#7c3aed;--purple-bg:#ede9fe;
+  --shadow:0 2px 16px rgba(37,99,235,.08);--shadow-lg:0 8px 32px rgba(37,99,235,.13);
+  --radius:12px;--radius-sm:8px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--text);
+}
+body{background:var(--bg);min-height:100vh;transition:background .3s,color .3s}
+body.dark{
+  --bg:#0f1729;--sidebar:#0a1128;--card:#1e2d5ecc;--card-solid:#1e2d5e;
+  --card-border:rgba(99,130,255,.2);--primary-light:#1a2650;--text:#e2e8ff;
+  --text2:#8fa0c8;--text3:#4a5a88;--green-bg:#14532d55;--amber-bg:#78350f44;
+  --red-bg:#7f1d1d44;--purple-bg:#4c1d9544;--shadow:0 2px 16px rgba(0,0,0,.35);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.45);
+}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+.sidebar{background:var(--sidebar);display:flex;flex-direction:column;padding:0 0 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.logo-area{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:8px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#60a5fa,#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex-shrink:0}
+.logo-text{color:#fff;font-size:15px;font-weight:700;letter-spacing:-.3px}
+.logo-sub{color:rgba(255,255,255,.4);font-size:11px}
+.nav-section{padding:0 12px;margin-bottom:4px}
+.nav-label{color:rgba(255,255,255,.3);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:12px 8px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;transition:background .15s;color:rgba(255,255,255,.6);font-size:13px;font-weight:500;margin-bottom:1px;text-decoration:none}
+.nav-item:hover{background:var(--sidebar-hover);color:#fff}
+.nav-item.active{background:var(--sidebar-active);color:#fff}
+.nav-item i{font-size:17px;width:20px;text-align:center}
+.badge{background:rgba(96,165,250,.25);color:#93c5fd;font-size:10px;font-weight:700;padding:2px 6px;border-radius:20px;margin-left:auto}
+.sidebar-footer{margin-top:auto;padding:12px}
+.user-card{background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.avatar-sm{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700;flex-shrink:0}
+.user-name{color:#fff;font-size:13px;font-weight:600}
+.user-role{color:rgba(255,255,255,.4);font-size:11px}
+.main{display:flex;flex-direction:column;min-height:100vh;overflow:hidden}
+.topbar{background:var(--card);border-bottom:1px solid var(--card-border);padding:0 24px;height:60px;display:flex;align-items:center;gap:14px;backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;margin-right:auto}
+.breadcrumb a{color:var(--text2);text-decoration:none;font-weight:500}
+.breadcrumb a:hover{color:var(--primary)}
+.breadcrumb span{color:var(--text3)}
+.breadcrumb strong{color:var(--text);font-weight:600}
+.icon-btn{width:36px;height:36px;border-radius:9px;background:var(--primary-light);border:1px solid var(--card-border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);position:relative;transition:background .15s;flex-shrink:0}
+.icon-btn:hover{background:var(--card-border)}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:#ef4444;border:2px solid var(--bg)}
+.topbar-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700;cursor:pointer;flex-shrink:0}
+.dark-btn{background:var(--primary-light);border:1px solid var(--card-border);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;font-family:inherit;margin-left:auto}
+.dark-btn:hover{background:var(--card-border)}
+.content{padding:22px 24px;display:flex;flex-direction:column;gap:18px}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.page-title{font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.5px}
+.page-sub{font-size:13px;color:var(--text2);margin-top:3px}
+.placeholder-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:40px 24px;backdrop-filter:blur(12px);box-shadow:var(--shadow);text-align:center;color:var(--text2);margin-top:20px}
+.placeholder-card i{font-size:48px;color:var(--text3);margin-bottom:12px;display:block}
+.placeholder-card h2{font-size:18px;color:var(--text);margin-bottom:8px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+
+/* Fee Collection Additions */
+.search-box{display:flex;align-items:center;gap:8px;background:var(--primary-light);border:1px solid var(--card-border);border-radius:8px;padding:7px 12px;color:var(--text2);font-size:13px;width:220px;transition:border .2s}
+.search-box input{background:none;border:none;outline:none;color:var(--text);font-size:13px;font-family:inherit;width:100%}
+.search-box input::placeholder{color:var(--text3)}
+.search-box i{font-size:15px;color:var(--text3);flex-shrink:0}
+.header-actions{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;border:none;font-family:inherit}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:0 4px 12px rgba(37,99,235,.3)}
+.btn-outline{background:var(--card-solid);color:var(--text2);border:1px solid var(--card-border)}
+.btn-outline:hover{background:var(--primary-light);color:var(--primary);border-color:var(--primary)}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:16px 18px;backdrop-filter:blur(12px);box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;transition:transform .2s,box-shadow .2s;cursor:pointer}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.stat-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+.si-blue{background:#dbeafe;color:#1d4ed8}
+.si-green{background:var(--green-bg);color:var(--green)}
+.si-amber{background:var(--amber-bg);color:var(--amber)}
+.si-red{background:var(--red-bg);color:var(--red)}
+.si-purple{background:var(--purple-bg);color:var(--purple)}
+.stat-num{font-size:22px;font-weight:800;letter-spacing:-1px;color:var(--text)}
+.stat-label{font-size:12px;color:var(--text2);font-weight:500;margin-top:1px;display:flex;align-items:center;gap:6px}
+.ai-badge{background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px}
+.toolbar{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:14px 16px;backdrop-filter:blur(12px);box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.filter-tabs{display:flex;gap:4px;background:var(--primary-light);border-radius:9px;padding:4px}
+.tab{padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text2);transition:all .15s;white-space:nowrap}
+.tab.active{background:var(--card-solid);color:var(--primary);box-shadow:0 1px 4px rgba(37,99,235,.12)}
+.tab:hover:not(.active){color:var(--text)}
+.filter-sep{width:1px;height:28px;background:var(--card-border);flex-shrink:0}
+.select-wrap{position:relative;display:flex;align-items:center}
+.select-wrap i{position:absolute;right:8px;font-size:14px;color:var(--text3);pointer-events:none}
+select{appearance:none;background:var(--primary-light);border:1px solid var(--card-border);border-radius:8px;padding:7px 28px 7px 10px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;font-family:inherit;outline:none;transition:border .15s}
+select:focus{border-color:var(--primary)}
+.toolbar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.results-count{font-size:12px;color:var(--text3);white-space:nowrap}
+.table-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);backdrop-filter:blur(12px);box-shadow:var(--shadow);overflow:hidden}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--primary-light)}
+th{padding:11px 14px;text-align:left;color:var(--text2);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;user-select:none;cursor:pointer}
+td{padding:13px 14px;color:var(--text);border-bottom:1px solid rgba(99,130,255,.06);font-size:13px;vertical-align:middle}
+tbody tr:hover td{background:rgba(37,99,235,.03)}
+.stu-cell{display:flex;align-items:center;gap:10px}
+.stu-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.stu-name{font-weight:600;font-size:13px;color:var(--text)}
+.stu-meta{font-size:11px;color:var(--text3);margin-top:1px}
+.fee-amount{font-weight:700;font-size:13.5px;color:var(--text)}
+.pill{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.pill-green{background:var(--green-bg);color:var(--green)}
+.pill-amber{background:var(--amber-bg);color:var(--amber)}
+.pill-red{background:var(--red-bg);color:var(--red)}
+.pill-blue{background:#dbeafe;color:#1d4ed8}
+.pill-purple{background:var(--purple-bg);color:var(--purple)}
+.pill-gray{background:rgba(99,130,255,.1);color:var(--text2)}
+.action-group{display:flex;align-items:center;gap:4px}
+.action-btn{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text3);transition:all .15s;font-size:15px;border:none;background:none}
+.action-btn:hover{background:var(--primary-light);color:var(--primary)}
+.action-btn.wa:hover{background:#dcfce7;color:#16a34a}
+.action-btn.pdf:hover{background:#fee2e2;color:#dc2626}
+
+/* Modals & Toasts */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,41,.55);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-backdrop.show{display:flex}
+.modal{background:var(--card-solid);border:1px solid var(--card-border);border-radius:16px;box-shadow:var(--shadow-lg);padding:28px;width:100%;max-width:540px;animation:slideUp .2s ease}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.modal-title{font-size:17px;font-weight:800;color:var(--text)}
+.modal-close{width:32px;height:32px;border-radius:8px;background:var(--primary-light);border:1px solid var(--card-border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:18px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+label{font-size:12px;font-weight:600;color:var(--text2)}
+input,select{background:var(--primary-light);border:1px solid var(--card-border);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;color:var(--text);outline:none;width:100%}
+input:focus,select:focus{border-color:var(--primary)}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:22px;border-top:1px solid var(--card-border);padding-top:18px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(22,163,74,.35);transform:translateY(80px);opacity:0;transition:all .3s;z-index:300}
+.toast.show{transform:translateY(0);opacity:1}
+
+@media(max-width:900px){.stats-row{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.stats-row{grid-template-columns:1fr} .form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo-area">
+      <div class="logo">
+        <div class="logo-icon"><i class="ti ti-school"></i></div>
+        <div><div class="logo-text">Zenfuture</div><div class="logo-sub">School Management</div></div>
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Main</div>
+      <a class="nav-item" href="dashboard.html"><i class="ti ti-layout-dashboard"></i>Dashboard</a>
+      <a class="nav-item" href="students.html"><i class="ti ti-users"></i>Students<span class="badge">1,284</span></a>
+      <a class="nav-item" href="teachers.html"><i class="ti ti-user-circle"></i>Teachers</a>
+      <a class="nav-item" href="attendance.html"><i class="ti ti-calendar-event"></i>Attendance</a>
+      <a class="nav-item" href="exams.html"><i class="ti ti-file-text"></i>Exams<span class="badge">3</span></a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Operations</div>
+      <a class="nav-item active" href="fees.html"><i class="ti ti-credit-card"></i>Fees</a>
+      <a class="nav-item" href="transport.html"><i class="ti ti-bus"></i>Transport</a>
+      <a class="nav-item" href="hostel.html"><i class="ti ti-building-community"></i>Hostel</a>
+      <a class="nav-item" href="library.html"><i class="ti ti-books"></i>Library</a>
+      <a class="nav-item" href="payroll.html"><i class="ti ti-cash-banknote"></i>Payroll</a><a class="nav-item" href="expenses.html"><i class="ti ti-receipt-2"></i>Expenses</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Intelligence</div>
+      <a class="nav-item" href="notices.html"><i class="ti ti-bell"></i>Notices<span class="badge">5</span></a>
+      <a class="nav-item" href="reports.html"><i class="ti ti-chart-bar"></i>Reports</a>
+      <a class="nav-item" href="ai-analytics.html"><i class="ti ti-brain"></i>AI Analytics</a>
+      <a class="nav-item" href="whatsapp-center.html"><i class="ti ti-brand-whatsapp"></i>WhatsApp Center</a>
+      <a class="nav-item" href="mobile-apps.html"><i class="ti ti-device-mobile"></i>Mobile Apps</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">System</div>
+      <a class="nav-item" href="modules.html"><i class="ti ti-layout-list"></i>Modules</a>
+      <a class="nav-item" href="settings.html"><i class="ti ti-settings"></i>Settings</a>
+      <a class="nav-item" href="#"><i class="ti ti-help-circle"></i>Help & Support</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="avatar-sm avatar">ZF</div>
+        <div><div class="user-name">Zenfuture</div><div class="user-role">Principal</div></div>
+        <i class="ti ti-dots-vertical" style="color:rgba(255,255,255,.3);font-size:16px;margin-left:auto"></i>
+      </div>
+    </div>
+  </aside>
+  <div class="main">
+    <nav class="topbar">
+      <div class="breadcrumb">
+        <a href="dashboard.html">Home</a>
+        <span><i class="ti ti-chevron-right" style="font-size:12px"></i></span>
+        <strong>Fee Collection</strong>
+      </div>
+      <div class="search-box">
+        <i class="ti ti-search"></i>
+        <input type="text" id="searchInput" placeholder="Search student or invoice..." oninput="filterFees()"/>
+      </div>
+      <button class="dark-btn" onclick="toggleDark()"><i class="ti ti-moon"></i>Dark</button>
+      <div class="icon-btn"><i class="ti ti-message-circle" style="font-size:18px"></i></div>
+      <div class="icon-btn"><i class="ti ti-bell" style="font-size:18px"></i><span class="notif-dot"></span></div>
+      <div class="topbar-avatar">ZF</div>
+    </nav>
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Fee Collection & Finance</div>
+          <div class="page-sub">Manage payments, gateways, WhatsApp receipts, and AI revenue forecasting.</div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="showToast('AI forecasting engine starting...')"><i class="ti ti-chart-line"></i>AI Forecast</button>
+          <button class="btn btn-primary" onclick="openModal()"><i class="ti ti-plus"></i>Collect Fee</button>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon si-green"><i class="ti ti-cash"></i></div>
+          <div><div class="stat-num">₹18.4L</div><div class="stat-label">Collected This Month</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-amber"><i class="ti ti-clock"></i></div>
+          <div><div class="stat-num">₹2.6L</div><div class="stat-label">Pending Dues</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-red"><i class="ti ti-alert-triangle"></i></div>
+          <div><div class="stat-num">48</div><div class="stat-label">High-Risk Defaulters <span class="ai-badge">AI Alert</span></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-blue"><i class="ti ti-credit-card"></i></div>
+          <div><div class="stat-num">72%</div><div class="stat-label">Online Payments (UPI/Card)</div></div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="filter-tabs" id="typeTabs">
+          <div class="tab active" onclick="setTab(this,'All')">All Fees</div>
+          <div class="tab" onclick="setTab(this,'Tuition Fee')">Tuition</div>
+          <div class="tab" onclick="setTab(this,'Hostel Fee')">Hostel</div>
+          <div class="tab" onclick="setTab(this,'Transport Fee')">Transport</div>
+          <div class="tab" onclick="setTab(this,'Exam Fee')">Exams</div>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="select-wrap">
+          <select id="statusFilter" onchange="filterFees()">
+            <option value="">Status</option>
+            <option value="Paid">Paid</option>
+            <option value="Pending">Pending</option>
+            <option value="Overdue">Overdue</option>
+          </select>
+          <i class="ti ti-chevron-down"></i>
+        </div>
+        <div class="toolbar-right">
+          <span class="results-count" id="resultsCount">Showing 8 records</span>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-wrap">
+          <table id="feeTable">
+            <thead>
+              <tr>
+                <th>Student Details</th>
+                <th>Fee Category</th>
+                <th>Amount</th>
+                <th>Due Date / Paid On</th>
+                <th>Status</th>
+                <th>AI Insights</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Collect Fee Modal -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Record Fee Payment</span>
+      <div class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group full"><label>Student Name / Roll No</label><input type="text" placeholder="e.g. Aryan Kapoor (1042)"/></div>
+      <div class="form-group"><label>Fee Type</label>
+        <select><option>Tuition Fee</option><option>Hostel Fee</option><option>Transport Fee</option><option>Library Fee</option><option>Exam Fee</option></select>
+      </div>
+      <div class="form-group"><label>Amount (₹)</label><input type="text" placeholder="e.g. 15000"/></div>
+      <div class="form-group full"><label>Payment Method</label>
+        <select><option>UPI (QR / App)</option><option>Razorpay Link</option><option>Stripe / Credit Card</option><option>Cash</option><option>Bank Transfer (NEFT)</option></select>
+      </div>
+      <div class="form-group full" style="flex-direction:row;align-items:center;gap:10px;margin-top:5px">
+        <input type="checkbox" checked style="width:16px;height:16px;accent-color:var(--primary)" id="waReceipt"/>
+        <label for="waReceipt" style="margin:0;cursor:pointer">Send GST Receipt via WhatsApp & Email automatically</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitFee()"><i class="ti ti-check"></i>Process Payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="ti ti-circle-check" style="font-size:17px"></i><span id="toastMsg">Action completed!</span></div>
+
+<script>
+const COLORS = ['#3b82f6','#8b5cf6','#f59e0b','#10b981','#ef4444','#6366f1','#0ea5e9','#f43f5e','#14b8a6','#a855f7'];
+
+const ALL_FEES = [
+  { id: 'INV-2041', name: 'Aryan Kapoor', cls: 'X-A', type: 'Tuition Fee', amt: 15000, date: '12 May 2026', status: 'Paid', insight: 'Pays on time', gateway: 'UPI QR' },
+  { id: 'INV-2042', name: 'Sneha Mehta', cls: 'IX-B', type: 'Hostel Fee', amt: 8500, date: '15 May 2026', status: 'Pending', insight: 'Usually pays 1 day late', gateway: '-' },
+  { id: 'INV-2043', name: 'Rohan Nair', cls: 'XI-C', type: 'Tuition Fee', amt: 18000, date: '01 May 2026', status: 'Overdue', insight: 'High Risk Defaulter', gateway: '-' },
+  { id: 'INV-2044', name: 'Pooja Joshi', cls: 'VIII-A', type: 'Transport Fee', amt: 3200, date: '10 May 2026', status: 'Paid', insight: 'Reliable Payer', gateway: 'Razorpay' },
+  { id: 'INV-2045', name: 'Karan Singh', cls: 'XII-B', type: 'Tuition Fee', amt: 18000, date: '05 May 2026', status: 'Overdue', insight: 'Needs Parent Follow-up', gateway: '-' },
+  { id: 'INV-2046', name: 'Divya Anand', cls: 'X-B', type: 'Exam Fee', amt: 1500, date: '14 May 2026', status: 'Paid', insight: 'Pays on time', gateway: 'Stripe' },
+  { id: 'INV-2047', name: 'Mihir Desai', cls: 'XI-A', type: 'Tuition Fee', amt: 18000, date: '20 May 2026', status: 'Pending', insight: 'Safe (Upcoming)', gateway: '-' },
+  { id: 'INV-2048', name: 'Priya Sharma', cls: 'IX-A', type: 'Library Fee', amt: 500, date: '11 May 2026', status: 'Paid', insight: 'Reliable Payer', gateway: 'Cash' }
+];
+
+let filtered = [...ALL_FEES];
+let activeType = 'All';
+
+function initials(name) { return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+function avatarColor(name) { let h=0; for(let c of name) h=(h*31+c.charCodeAt(0))%COLORS.length; return COLORS[h]; }
+
+function getStatusPill(s) {
+  if(s === 'Paid') return 'pill-green';
+  if(s === 'Pending') return 'pill-amber';
+  return 'pill-red';
+}
+
+function getInsightBadge(insight) {
+  if(insight.includes('High Risk') || insight.includes('Follow-up')) return '<span class="pill pill-red"><i class="ti ti-robot" style="font-size:11px;margin-right:3px"></i> ' + insight + '</span>';
+  if(insight.includes('Late')) return '<span class="pill pill-amber"><i class="ti ti-robot" style="font-size:11px;margin-right:3px"></i> ' + insight + '</span>';
+  return '<span class="pill pill-gray" style="font-weight:600"><i class="ti ti-robot" style="font-size:11px;margin-right:3px"></i> ' + insight + '</span>';
+}
+
+function setTab(el, type) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  activeType = type;
+  filterFees();
+}
+
+function filterFees() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const status = document.getElementById('statusFilter').value;
+  
+  filtered = ALL_FEES.filter(f => {
+    const matchType = activeType === 'All' || f.type === activeType;
+    const matchQ = f.name.toLowerCase().includes(q) || f.id.toLowerCase().includes(q);
+    const matchStatus = !status || f.status === status;
+    return matchType && matchQ && matchStatus;
+  });
+  render();
+}
+
+function render() {
+  document.getElementById('resultsCount').textContent = `Showing ${filtered.length} records`;
+  document.getElementById('tableBody').innerHTML = filtered.map(f => `
+    <tr>
+      <td><div class="stu-cell"><div class="stu-avatar" style="background:${avatarColor(f.name)}">${initials(f.name)}</div><div><div class="stu-name">${f.name}</div><div class="stu-meta">${f.cls} - ${f.id}</div></div></div></td>
+      <td><span class="pill pill-blue">${f.type}</span></td>
+      <td><div class="fee-amount">₹${f.amt.toLocaleString('en-IN')}</div><div class="stu-meta">${f.gateway !== '-' ? f.gateway : '-'}</div></td>
+      <td style="color:var(--text2);font-weight:600;font-size:12px">${f.date}</td>
+      <td><span class="pill ${getStatusPill(f.status)}">${f.status}</span></td>
+      <td>${getInsightBadge(f.insight)}</td>
+      <td><div class="action-group">
+        ${f.status === 'Paid' 
+          ? `<button class="action-btn wa" title="Send WhatsApp Receipt" onclick="showToast('Receipt sent to parent!')"><i class="ti ti-brand-whatsapp"></i></button>
+             <button class="action-btn pdf" title="Download GST Invoice" onclick="showToast('Downloading Invoice...')"><i class="ti ti-file-type-pdf"></i></button>`
+          : `<button class="action-btn" title="Send Payment Link" onclick="showToast('Payment Link SMS & WhatsApp sent!')"><i class="ti ti-link"></i></button>
+             <button class="action-btn" title="Mark as Paid" onclick="showToast('Opening payment terminal...')"><i class="ti ti-wallet"></i></button>`
+        }
+      </div></td>
+    </tr>
+  `).join('');
+}
+
+function toggleDark() { document.body.classList.toggle('dark'); }
+function openModal() { document.getElementById('modalBackdrop').classList.add('show'); }
+function closeModal() { document.getElementById('modalBackdrop').classList.remove('show'); }
+function closeModalOutside(e) { if(e.target === document.getElementById('modalBackdrop')) closeModal(); }
+function submitFee() { closeModal(); showToast('Payment processed and receipt sent!'); }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+render();
+</script>
+</body>
+</html>
+
+
+
+
+

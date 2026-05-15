@@ -1,0 +1,386 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Reports</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;--sidebar:#1a2b6b;--sidebar-hover:rgba(255,255,255,.1);--sidebar-active:rgba(255,255,255,.18);
+  --card:#ffffffcc;--card-solid:#ffffff;--card-border:rgba(99,130,255,.15);
+  --primary:#2563eb;--primary-light:#eff4ff;--primary-hover:#1d4ed8;
+  --text:#1e2d60;--text2:#5a6ea0;--text3:#8fa0c8;
+  --green:#16a34a;--green-bg:#dcfce7;--amber:#d97706;--amber-bg:#fef3c7;
+  --red:#dc2626;--red-bg:#fee2e2;--purple:#7c3aed;--purple-bg:#ede9fe;
+  --shadow:0 2px 16px rgba(37,99,235,.08);--shadow-lg:0 8px 32px rgba(37,99,235,.13);
+  --radius:12px;--radius-sm:8px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--text);
+}
+body{background:var(--bg);min-height:100vh;transition:background .3s,color .3s}
+body.dark{
+  --bg:#0f1729;--sidebar:#0a1128;--card:#1e2d5ecc;--card-solid:#1e2d5e;
+  --card-border:rgba(99,130,255,.2);--primary-light:#1a2650;--text:#e2e8ff;
+  --text2:#8fa0c8;--text3:#4a5a88;--green-bg:#14532d55;--amber-bg:#78350f44;
+  --red-bg:#7f1d1d44;--purple-bg:#4c1d9544;--shadow:0 2px 16px rgba(0,0,0,.35);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.45);
+}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+.sidebar{background:var(--sidebar);display:flex;flex-direction:column;padding:0 0 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.logo-area{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:8px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#60a5fa,#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex-shrink:0}
+.logo-text{color:#fff;font-size:15px;font-weight:700;letter-spacing:-.3px}
+.logo-sub{color:rgba(255,255,255,.4);font-size:11px}
+.nav-section{padding:0 12px;margin-bottom:4px}
+.nav-label{color:rgba(255,255,255,.3);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:12px 8px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;transition:background .15s;color:rgba(255,255,255,.6);font-size:13px;font-weight:500;margin-bottom:1px;text-decoration:none}
+.nav-item:hover{background:var(--sidebar-hover);color:#fff}
+.nav-item.active{background:var(--sidebar-active);color:#fff}
+.nav-item i{font-size:17px;width:20px;text-align:center}
+.badge{background:rgba(96,165,250,.25);color:#93c5fd;font-size:10px;font-weight:700;padding:2px 6px;border-radius:20px;margin-left:auto}
+.sidebar-footer{margin-top:auto;padding:12px}
+.user-card{background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.avatar-sm{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700;flex-shrink:0}
+.user-name{color:#fff;font-size:13px;font-weight:600}
+.user-role{color:rgba(255,255,255,.4);font-size:11px}
+.main{display:flex;flex-direction:column;min-height:100vh;overflow:hidden}
+.topbar{background:var(--card);border-bottom:1px solid var(--card-border);padding:0 24px;height:60px;display:flex;align-items:center;gap:14px;backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;margin-right:auto}
+.breadcrumb a{color:var(--text2);text-decoration:none;font-weight:500}
+.breadcrumb a:hover{color:var(--primary)}
+.breadcrumb span{color:var(--text3)}
+.breadcrumb strong{color:var(--text);font-weight:600}
+.icon-btn{width:36px;height:36px;border-radius:9px;background:var(--primary-light);border:1px solid var(--card-border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);position:relative;transition:background .15s;flex-shrink:0}
+.icon-btn:hover{background:var(--card-border)}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:#ef4444;border:2px solid var(--bg)}
+.topbar-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700;cursor:pointer;flex-shrink:0}
+.dark-btn{background:var(--primary-light);border:1px solid var(--card-border);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;font-family:inherit;margin-left:auto}
+.dark-btn:hover{background:var(--card-border)}
+.content{padding:22px 24px;display:flex;flex-direction:column;gap:18px}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.page-title{font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.5px}
+.page-sub{font-size:13px;color:var(--text2);margin-top:3px}
+.placeholder-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:40px 24px;backdrop-filter:blur(12px);box-shadow:var(--shadow);text-align:center;color:var(--text2);margin-top:20px}
+.placeholder-card i{font-size:48px;color:var(--text3);margin-bottom:12px;display:block}
+.placeholder-card h2{font-size:18px;color:var(--text);margin-bottom:8px}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 15px;border-radius:9px;border:0;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .16s}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:0 8px 20px rgba(37,99,235,.22)}
+.btn-outline{background:var(--card-solid);color:var(--text2);border:1px solid var(--card-border)}
+.btn-outline:hover{color:var(--primary);background:var(--primary-light);border-color:var(--primary)}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);backdrop-filter:blur(12px);display:flex;align-items:center;gap:14px;transition:transform .2s,box-shadow .2s}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.stat-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+.si-blue{background:#dbeafe;color:#1d4ed8}.si-green{background:var(--green-bg);color:var(--green)}.si-amber{background:var(--amber-bg);color:var(--amber)}.si-purple{background:var(--purple-bg);color:var(--purple)}
+.stat-num{font-size:22px;font-weight:800;letter-spacing:-.8px;color:var(--text)}
+.stat-label{font-size:12px;color:var(--text2);font-weight:600;margin-top:2px}
+.report-hero{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
+.panel{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);backdrop-filter:blur(12px);overflow:hidden;position:relative}
+.panel.glass{background:linear-gradient(145deg,rgba(255,255,255,.86),rgba(255,255,255,.58));backdrop-filter:blur(16px)}
+body.dark .panel.glass{background:linear-gradient(145deg,rgba(30,45,94,.9),rgba(30,45,94,.58))}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.panel-title{font-size:14px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:7px}
+.panel-note{font-size:11px;color:var(--text3);font-weight:700}
+.chart-wrap{height:228px;display:flex;align-items:end;gap:12px;padding:20px 10px 0;border-bottom:1px solid var(--card-border);background:linear-gradient(to top,rgba(37,99,235,.08),transparent)}
+.bar{flex:1;min-width:28px;border-radius:9px 9px 0 0;background:linear-gradient(180deg,#60a5fa,#2563eb);position:relative;box-shadow:0 9px 20px rgba(37,99,235,.18);animation:rise .8s ease both}
+.bar:nth-child(2n){background:linear-gradient(180deg,#a78bfa,#7c3aed)}
+.bar::after{content:attr(data-label);position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--text3);font-weight:800}
+.bar::before{content:attr(data-value);position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--text2);font-weight:800}
+@keyframes rise{from{height:0;opacity:.5}to{opacity:1}}
+.insight-list{display:flex;flex-direction:column;gap:10px}
+.insight-item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;background:var(--primary-light);border:1px solid var(--card-border);border-radius:10px;padding:10px}
+.insight-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;background:linear-gradient(135deg,#7c3aed,#ec4899)}
+.insight-title{font-size:12.5px;font-weight:800;color:var(--text)}
+.insight-copy{font-size:11px;color:var(--text2);margin-top:2px}
+.pill{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:800;white-space:nowrap}
+.pill-green{background:var(--green-bg);color:var(--green)}.pill-amber{background:var(--amber-bg);color:var(--amber)}.pill-blue{background:#dbeafe;color:#1d4ed8}.pill-purple{background:var(--purple-bg);color:var(--purple)}.pill-gray{background:rgba(99,130,255,.1);color:var(--text2)}
+.report-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.report-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);backdrop-filter:blur(12px);transition:transform .2s,box-shadow .2s;cursor:pointer}
+.report-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.report-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;color:#fff;margin-bottom:10px;background:linear-gradient(135deg,#2563eb,#7c3aed)}
+.report-card:nth-child(2) .report-icon{background:linear-gradient(135deg,#22c55e,#16a34a)}
+.report-card:nth-child(3) .report-icon{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.report-card:nth-child(4) .report-icon{background:linear-gradient(135deg,#7c3aed,#ec4899)}
+.report-card:nth-child(5) .report-icon{background:linear-gradient(135deg,#0ea5e9,#2563eb)}
+.report-card:nth-child(6) .report-icon{background:linear-gradient(135deg,#14b8a6,#16a34a)}
+.report-card:nth-child(7) .report-icon{background:linear-gradient(135deg,#6366f1,#7c3aed)}
+.report-card:nth-child(8) .report-icon{background:linear-gradient(135deg,#ec4899,#dc2626)}
+.report-title{font-size:13px;font-weight:800;color:var(--text)}
+.report-desc{font-size:11.5px;line-height:1.5;color:var(--text2);margin-top:5px}
+.report-meta{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+.tiny-tag{background:var(--primary-light);border:1px solid var(--card-border);border-radius:999px;color:var(--text2);font-size:10px;font-weight:800;padding:3px 7px}
+.table-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(12px);overflow:hidden}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--primary-light)}
+th{padding:12px 14px;text-align:left;color:var(--text2);font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+td{padding:13px 14px;color:var(--text);border-bottom:1px solid rgba(99,130,255,.08);font-size:13px;vertical-align:middle}
+tbody tr:hover td{background:rgba(37,99,235,.03)}
+.report-name{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--text)}
+.mini-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,#2563eb,#7c3aed);font-size:15px}
+.action-group{display:flex;align-items:center;gap:5px}
+.action-btn{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:0;background:transparent;color:var(--text3);font-size:16px;cursor:pointer;transition:all .15s}
+.action-btn:hover{background:var(--primary-light);color:var(--primary)}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(22,163,74,.35);transform:translateY(80px);opacity:0;transition:all .3s;z-index:300}
+.toast.show{transform:translateY(0);opacity:1}
+@media(max-width:1100px){.report-hero{grid-template-columns:1fr}.report-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}.stats-row{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.content{padding:18px 14px}.stats-row,.report-grid{grid-template-columns:1fr}.topbar{padding:0 14px}.dark-btn{margin-left:0}.chart-wrap{gap:7px;padding-left:2px;padding-right:2px}.bar{min-width:18px}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo-area">
+      <div class="logo">
+        <div class="logo-icon"><i class="ti ti-school"></i></div>
+        <div><div class="logo-text">Zenfuture</div><div class="logo-sub">School Management</div></div>
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Main</div>
+      <a class="nav-item" href="dashboard.html"><i class="ti ti-layout-dashboard"></i>Dashboard</a>
+      <a class="nav-item" href="students.html"><i class="ti ti-users"></i>Students<span class="badge">1,284</span></a>
+      <a class="nav-item" href="teachers.html"><i class="ti ti-user-circle"></i>Teachers</a>
+      <a class="nav-item" href="attendance.html"><i class="ti ti-calendar-event"></i>Attendance</a>
+      <a class="nav-item" href="exams.html"><i class="ti ti-file-text"></i>Exams<span class="badge">3</span></a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Operations</div>
+      <a class="nav-item" href="fees.html"><i class="ti ti-credit-card"></i>Fees</a>
+      <a class="nav-item" href="transport.html"><i class="ti ti-bus"></i>Transport</a>
+      <a class="nav-item" href="hostel.html"><i class="ti ti-building-community"></i>Hostel</a>
+      <a class="nav-item" href="library.html"><i class="ti ti-books"></i>Library</a>
+      <a class="nav-item" href="payroll.html"><i class="ti ti-cash-banknote"></i>Payroll</a><a class="nav-item" href="expenses.html"><i class="ti ti-receipt-2"></i>Expenses</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Intelligence</div>
+      <a class="nav-item" href="notices.html"><i class="ti ti-bell"></i>Notices<span class="badge">5</span></a>
+      <a class="nav-item active" href="reports.html"><i class="ti ti-chart-bar"></i>Reports</a>
+      <a class="nav-item" href="ai-analytics.html"><i class="ti ti-brain"></i>AI Analytics</a>
+      <a class="nav-item" href="whatsapp-center.html"><i class="ti ti-brand-whatsapp"></i>WhatsApp Center</a>
+      <a class="nav-item" href="mobile-apps.html"><i class="ti ti-device-mobile"></i>Mobile Apps</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">System</div>
+      <a class="nav-item" href="modules.html"><i class="ti ti-layout-list"></i>Modules</a>
+      <a class="nav-item" href="settings.html"><i class="ti ti-settings"></i>Settings</a>
+      <a class="nav-item" href="#"><i class="ti ti-help-circle"></i>Help & Support</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="avatar-sm avatar">ZF</div>
+        <div><div class="user-name">Zenfuture</div><div class="user-role">Principal</div></div>
+        <i class="ti ti-dots-vertical" style="color:rgba(255,255,255,.3);font-size:16px;margin-left:auto"></i>
+      </div>
+    </div>
+  </aside>
+  <div class="main">
+    <nav class="topbar">
+      <div class="breadcrumb">
+        <a href="dashboard.html">Home</a>
+        <span><i class="ti ti-chevron-right" style="font-size:12px"></i></span>
+        <strong>Reports</strong>
+      </div>
+      <button class="dark-btn" onclick="toggleDark()"><i class="ti ti-moon"></i>Dark</button>
+      <div class="icon-btn"><i class="ti ti-message-circle" style="font-size:18px"></i></div>
+      <div class="icon-btn"><i class="ti ti-bell" style="font-size:18px"></i><span class="notif-dot"></span></div>
+      <div class="topbar-avatar">ZF</div>
+    </nav>
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Reports & AI Insights</div>
+          <div class="page-sub">Generate attendance, fee, exam, payroll, transport, library, hostel, and prediction reports.</div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="showToast('AI predictions are being refreshed')"><i class="ti ti-brain"></i>AI Insights</button>
+          <button class="btn btn-primary" onclick="showToast('Combined report exported')"><i class="ti ti-download"></i>Export All</button>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon si-blue"><i class="ti ti-file-analytics"></i></div>
+          <div><div class="stat-num">128</div><div class="stat-label">Reports Generated</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-green"><i class="ti ti-cash"></i></div>
+          <div><div class="stat-num">₹18.4L</div><div class="stat-label">Fee Collection Tracked</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-amber"><i class="ti ti-school"></i></div>
+          <div><div class="stat-num">94.8%</div><div class="stat-label">Attendance Average</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-purple"><i class="ti ti-sparkles"></i></div>
+          <div><div class="stat-num">23</div><div class="stat-label">AI Predictions Ready</div></div>
+        </div>
+      </div>
+
+      <div class="report-hero">
+        <section class="panel glass">
+          <div class="panel-head">
+            <div class="panel-title"><i class="ti ti-chart-histogram"></i>Report Activity Trend</div>
+            <div class="panel-note">Monthly generated reports</div>
+          </div>
+          <div class="chart-wrap">
+            <div class="bar" style="height:52%" data-label="Jun" data-value="58"></div>
+            <div class="bar" style="height:68%" data-label="Jul" data-value="74"></div>
+            <div class="bar" style="height:61%" data-label="Aug" data-value="69"></div>
+            <div class="bar" style="height:76%" data-label="Sep" data-value="88"></div>
+            <div class="bar" style="height:83%" data-label="Oct" data-value="104"></div>
+            <div class="bar" style="height:92%" data-label="Nov" data-value="128"></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><i class="ti ti-brain"></i>AI Insights</div>
+            <div class="panel-note">Predictions</div>
+          </div>
+          <div class="insight-list">
+            <div class="insight-item">
+              <div class="insight-icon"><i class="ti ti-trending-up"></i></div>
+              <div><div class="insight-title">Fee collection likely to improve</div><div class="insight-copy">UPI reminders may recover 72% pending dues.</div></div>
+              <span class="pill pill-green">High</span>
+            </div>
+            <div class="insight-item">
+              <div class="insight-icon"><i class="ti ti-alert-triangle"></i></div>
+              <div><div class="insight-title">Attendance drop risk</div><div class="insight-copy">Class IX-B shows 9% monthly decline.</div></div>
+              <span class="pill pill-amber">Watch</span>
+            </div>
+            <div class="insight-item">
+              <div class="insight-icon"><i class="ti ti-trophy"></i></div>
+              <div><div class="insight-title">Exam rank improvement</div><div class="insight-copy">Remedial batch students improved by 11%.</div></div>
+              <span class="pill pill-purple">AI</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="report-grid">
+        <div class="report-card" onclick="showToast('Attendance report opened')">
+          <div class="report-icon"><i class="ti ti-calendar-check"></i></div>
+          <div class="report-title">Attendance Reports</div>
+          <div class="report-desc">Daily and monthly attendance for students, teachers, staff, and shifts.</div>
+          <div class="report-meta"><span class="tiny-tag">Daily</span><span class="tiny-tag">Monthly</span></div>
+        </div>
+        <div class="report-card" onclick="showToast('Fee report opened')">
+          <div class="report-icon"><i class="ti ti-credit-card"></i></div>
+          <div class="report-title">Fee Reports</div>
+          <div class="report-desc">Collection, pending dues, overdue invoices, gateway, and class-wise finance reports.</div>
+          <div class="report-meta"><span class="tiny-tag">Collection</span><span class="tiny-tag">Pending</span></div>
+        </div>
+        <div class="report-card" onclick="showToast('Exam report opened')">
+          <div class="report-icon"><i class="ti ti-file-text"></i></div>
+          <div class="report-title">Exam Reports</div>
+          <div class="report-desc">Marks, ranks, toppers, pass percentage, and subject-wise performance analytics.</div>
+          <div class="report-meta"><span class="tiny-tag">Marks</span><span class="tiny-tag">Ranks</span></div>
+        </div>
+        <div class="report-card" onclick="showToast('Payroll report opened')">
+          <div class="report-icon"><i class="ti ti-cash-banknote"></i></div>
+          <div class="report-title">Payroll Reports</div>
+          <div class="report-desc">Salary analytics, working hours, overtime, late deductions, and payroll sync.</div>
+          <div class="report-meta"><span class="tiny-tag">Salary</span><span class="tiny-tag">Analytics</span></div>
+        </div>
+        <div class="report-card" onclick="showToast('Transport report opened')">
+          <div class="report-icon"><i class="ti ti-bus"></i></div>
+          <div class="report-title">Transport Reports</div>
+          <div class="report-desc">Route analytics, trip monitoring, driver logs, fuel usage, and student boarding data.</div>
+          <div class="report-meta"><span class="tiny-tag">Routes</span><span class="tiny-tag">Fuel</span></div>
+        </div>
+        <div class="report-card" onclick="showToast('Library report opened')">
+          <div class="report-icon"><i class="ti ti-books"></i></div>
+          <div class="report-title">Library Reports</div>
+          <div class="report-desc">Book usage, issue returns, overdue books, popular titles, and student reading trends.</div>
+          <div class="report-meta"><span class="tiny-tag">Books</span><span class="tiny-tag">Usage</span></div>
+        </div>
+        <div class="report-card" onclick="showToast('Hostel report opened')">
+          <div class="report-icon"><i class="ti ti-building-community"></i></div>
+          <div class="report-title">Hostel Reports</div>
+          <div class="report-desc">Occupancy, room allocation, mess attendance, leave logs, and hostel fee summaries.</div>
+          <div class="report-meta"><span class="tiny-tag">Occupancy</span><span class="tiny-tag">Rooms</span></div>
+        </div>
+        <div class="report-card" onclick="showToast('AI prediction report opened')">
+          <div class="report-icon"><i class="ti ti-sparkles"></i></div>
+          <div class="report-title">AI Insights</div>
+          <div class="report-desc">Predictions for attendance risk, fee recovery, exam performance, and staff trends.</div>
+          <div class="report-meta"><span class="tiny-tag">Predictions</span><span class="tiny-tag">Risk</span></div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Report</th>
+                <th>Description</th>
+                <th>Frequency</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="reportTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast" id="toast"><i class="ti ti-circle-check"></i><span id="toastMsg">Action completed</span></div>
+<script>
+const REPORTS=[
+  {name:'Attendance Reports',icon:'ti-calendar-check',description:'Daily/monthly attendance summaries',frequency:'Daily / Monthly',status:'Ready'},
+  {name:'Fee Reports',icon:'ti-credit-card',description:'Collection and pending fee reports',frequency:'Daily',status:'Ready'},
+  {name:'Exam Reports',icon:'ti-file-text',description:'Marks, ranks, pass rate, and toppers',frequency:'Exam Wise',status:'Ready'},
+  {name:'Payroll Reports',icon:'ti-cash-banknote',description:'Salary analytics and attendance sync',frequency:'Monthly',status:'Review'},
+  {name:'Transport Reports',icon:'ti-bus',description:'Route analytics and trip monitoring',frequency:'Live / Monthly',status:'Ready'},
+  {name:'Library Reports',icon:'ti-books',description:'Book usage, issue returns, and overdue tracking',frequency:'Weekly',status:'Ready'},
+  {name:'Hostel Reports',icon:'ti-building-community',description:'Occupancy and hostel activity reports',frequency:'Monthly',status:'Review'},
+  {name:'AI Insights',icon:'ti-sparkles',description:'Predictions and risk analytics',frequency:'Live',status:'AI'}
+];
+function statusPill(status){
+  if(status==='Ready')return 'pill-green';
+  if(status==='Review')return 'pill-amber';
+  return 'pill-purple';
+}
+function renderReports(){
+  document.getElementById('reportTable').innerHTML=REPORTS.map(r=>`
+    <tr>
+      <td><div class="report-name"><div class="mini-icon"><i class="ti ${r.icon}"></i></div>${r.name}</div></td>
+      <td style="color:var(--text2)">${r.description}</td>
+      <td><span class="pill pill-gray">${r.frequency}</span></td>
+      <td><span class="pill ${statusPill(r.status)}">${r.status}</span></td>
+      <td><div class="action-group">
+        <button class="action-btn" title="View" onclick="showToast('${r.name} preview opened')"><i class="ti ti-eye"></i></button>
+        <button class="action-btn" title="Download PDF" onclick="showToast('${r.name} PDF downloaded')"><i class="ti ti-file-type-pdf"></i></button>
+        <button class="action-btn" title="Export Excel" onclick="showToast('${r.name} Excel exported')"><i class="ti ti-file-spreadsheet"></i></button>
+      </div></td>
+    </tr>
+  `).join('');
+}
+function toggleDark(){document.body.classList.toggle('dark')}
+function showToast(msg){
+  const toast=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),2600);
+}
+renderReports();
+</script>
+</body>
+</html>
+
+
+
+
+
+

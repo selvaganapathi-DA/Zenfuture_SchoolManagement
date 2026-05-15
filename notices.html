@@ -1,0 +1,411 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Notices</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;--sidebar:#1a2b6b;--sidebar-hover:rgba(255,255,255,.1);--sidebar-active:rgba(255,255,255,.18);
+  --card:#ffffffcc;--card-solid:#ffffff;--card-border:rgba(99,130,255,.15);
+  --primary:#2563eb;--primary-light:#eff4ff;--primary-hover:#1d4ed8;
+  --text:#1e2d60;--text2:#5a6ea0;--text3:#8fa0c8;
+  --green:#16a34a;--green-bg:#dcfce7;--amber:#d97706;--amber-bg:#fef3c7;
+  --red:#dc2626;--red-bg:#fee2e2;--purple:#7c3aed;--purple-bg:#ede9fe;
+  --shadow:0 2px 16px rgba(37,99,235,.08);--shadow-lg:0 8px 32px rgba(37,99,235,.13);
+  --radius:12px;--radius-sm:8px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--text);
+}
+body{background:var(--bg);min-height:100vh;transition:background .3s,color .3s}
+body.dark{
+  --bg:#0f1729;--sidebar:#0a1128;--card:#1e2d5ecc;--card-solid:#1e2d5e;
+  --card-border:rgba(99,130,255,.2);--primary-light:#1a2650;--text:#e2e8ff;
+  --text2:#8fa0c8;--text3:#4a5a88;--green-bg:#14532d55;--amber-bg:#78350f44;
+  --red-bg:#7f1d1d44;--purple-bg:#4c1d9544;--shadow:0 2px 16px rgba(0,0,0,.35);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.45);
+}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+.sidebar{background:var(--sidebar);display:flex;flex-direction:column;padding:0 0 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.logo-area{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:8px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#60a5fa,#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex-shrink:0}
+.logo-text{color:#fff;font-size:15px;font-weight:700;letter-spacing:-.3px}
+.logo-sub{color:rgba(255,255,255,.4);font-size:11px}
+.nav-section{padding:0 12px;margin-bottom:4px}
+.nav-label{color:rgba(255,255,255,.3);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:12px 8px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;transition:background .15s;color:rgba(255,255,255,.6);font-size:13px;font-weight:500;margin-bottom:1px;text-decoration:none}
+.nav-item:hover{background:var(--sidebar-hover);color:#fff}
+.nav-item.active{background:var(--sidebar-active);color:#fff}
+.nav-item i{font-size:17px;width:20px;text-align:center}
+.badge{background:rgba(96,165,250,.25);color:#93c5fd;font-size:10px;font-weight:700;padding:2px 6px;border-radius:20px;margin-left:auto}
+.sidebar-footer{margin-top:auto;padding:12px}
+.user-card{background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.avatar-sm{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700;flex-shrink:0}
+.user-name{color:#fff;font-size:13px;font-weight:600}
+.user-role{color:rgba(255,255,255,.4);font-size:11px}
+.main{display:flex;flex-direction:column;min-height:100vh;overflow:hidden}
+.topbar{background:var(--card);border-bottom:1px solid var(--card-border);padding:0 24px;height:60px;display:flex;align-items:center;gap:14px;backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;margin-right:auto}
+.breadcrumb a{color:var(--text2);text-decoration:none;font-weight:500}
+.breadcrumb a:hover{color:var(--primary)}
+.breadcrumb span{color:var(--text3)}
+.breadcrumb strong{color:var(--text);font-weight:600}
+.icon-btn{width:36px;height:36px;border-radius:9px;background:var(--primary-light);border:1px solid var(--card-border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);position:relative;transition:background .15s;flex-shrink:0}
+.icon-btn:hover{background:var(--card-border)}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:#ef4444;border:2px solid var(--bg)}
+.topbar-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700;cursor:pointer;flex-shrink:0}
+.dark-btn{background:var(--primary-light);border:1px solid var(--card-border);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;font-family:inherit;margin-left:auto}
+.dark-btn:hover{background:var(--card-border)}
+.content{padding:22px 24px;display:flex;flex-direction:column;gap:18px}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.page-title{font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.5px}
+.page-sub{font-size:13px;color:var(--text2);margin-top:3px}
+.placeholder-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:40px 24px;backdrop-filter:blur(12px);box-shadow:var(--shadow);text-align:center;color:var(--text2);margin-top:20px}
+.placeholder-card i{font-size:48px;color:var(--text3);margin-bottom:12px;display:block}
+.placeholder-card h2{font-size:18px;color:var(--text);margin-bottom:8px}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 15px;border-radius:9px;border:0;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .16s}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:0 8px 20px rgba(37,99,235,.22)}
+.btn-outline{background:var(--card-solid);color:var(--text2);border:1px solid var(--card-border)}
+.btn-outline:hover{color:var(--primary);background:var(--primary-light);border-color:var(--primary)}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);backdrop-filter:blur(12px);display:flex;align-items:center;gap:14px;transition:transform .2s,box-shadow .2s}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.stat-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+.si-blue{background:#dbeafe;color:#1d4ed8}.si-green{background:var(--green-bg);color:var(--green)}.si-amber{background:var(--amber-bg);color:var(--amber)}.si-red{background:var(--red-bg);color:var(--red)}
+.stat-num{font-size:22px;font-weight:800;letter-spacing:-.8px;color:var(--text)}
+.stat-label{font-size:12px;color:var(--text2);font-weight:600;margin-top:2px}
+.notice-layout{display:grid;grid-template-columns:1fr 360px;gap:14px}
+.panel{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);backdrop-filter:blur(12px);overflow:hidden}
+.panel.glass{background:linear-gradient(145deg,rgba(255,255,255,.86),rgba(255,255,255,.58));backdrop-filter:blur(16px)}
+body.dark .panel.glass{background:linear-gradient(145deg,rgba(30,45,94,.9),rgba(30,45,94,.58))}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.panel-title{font-size:14px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:7px}
+.panel-note{font-size:11px;color:var(--text3);font-weight:700}
+.category-tabs{display:flex;gap:6px;overflow-x:auto;background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:8px;box-shadow:var(--shadow);backdrop-filter:blur(12px)}
+.category-tab{display:flex;align-items:center;gap:7px;white-space:nowrap;padding:8px 12px;border-radius:9px;color:var(--text2);font-size:12px;font-weight:800;cursor:pointer;transition:all .16s}
+.category-tab:hover{background:var(--primary-light);color:var(--text)}
+.category-tab.active{background:var(--primary);color:#fff;box-shadow:0 8px 18px rgba(37,99,235,.2)}
+.notice-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.notice-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s}
+.notice-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.notice-top{display:flex;align-items:flex-start;gap:10px}
+.notice-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;background:linear-gradient(135deg,#2563eb,#7c3aed);flex-shrink:0}
+.notice-icon.emergency{background:linear-gradient(135deg,#ef4444,#dc2626)}.notice-icon.transport{background:linear-gradient(135deg,#0ea5e9,#2563eb)}.notice-icon.fee{background:linear-gradient(135deg,#22c55e,#16a34a)}.notice-icon.events{background:linear-gradient(135deg,#f59e0b,#d97706)}.notice-icon.holiday{background:linear-gradient(135deg,#14b8a6,#0d9488)}.notice-icon.staff{background:linear-gradient(135deg,#6366f1,#7c3aed)}
+.notice-title{font-size:13.5px;font-weight:800;color:var(--text)}
+.notice-meta{font-size:11px;color:var(--text3);margin-top:3px;font-weight:700}
+.notice-copy{font-size:12px;color:var(--text2);line-height:1.55;margin-top:10px}
+.pill{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:800;white-space:nowrap}
+.pill-green{background:var(--green-bg);color:var(--green)}.pill-amber{background:var(--amber-bg);color:var(--amber)}.pill-red{background:var(--red-bg);color:var(--red)}.pill-blue{background:#dbeafe;color:#1d4ed8}.pill-purple{background:var(--purple-bg);color:var(--purple)}.pill-gray{background:rgba(99,130,255,.1);color:var(--text2)}
+.notice-actions{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px}
+.channel-list{display:flex;gap:5px;flex-wrap:wrap}
+.channel{background:var(--primary-light);border:1px solid var(--card-border);border-radius:999px;color:var(--text2);font-size:10px;font-weight:800;padding:3px 7px}
+.mini-actions{display:flex;gap:4px}
+.action-btn{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:0;background:transparent;color:var(--text3);font-size:15px;cursor:pointer;transition:all .15s}
+.action-btn:hover{background:var(--primary-light);color:var(--primary)}
+.table-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(12px);overflow:hidden}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--primary-light)}
+th{padding:12px 14px;text-align:left;color:var(--text2);font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+td{padding:13px 14px;color:var(--text);border-bottom:1px solid rgba(99,130,255,.08);font-size:13px;vertical-align:middle}
+tbody tr:hover td{background:rgba(37,99,235,.03)}
+.type-cell{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--text)}
+.mini-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,#2563eb,#7c3aed);font-size:15px}
+.compose-card{display:flex;flex-direction:column;gap:11px}
+label{font-size:12px;font-weight:700;color:var(--text2)}
+input,select,textarea{width:100%;background:var(--primary-light);border:1px solid var(--card-border);border-radius:9px;padding:9px 11px;font-family:inherit;font-size:13px;color:var(--text);outline:none}
+textarea{min-height:96px;resize:vertical;line-height:1.5}
+input:focus,select:focus,textarea:focus{border-color:var(--primary)}
+.form-row{display:flex;flex-direction:column;gap:5px}
+.delivery-list{display:flex;flex-direction:column;gap:10px;margin-top:2px}
+.delivery-item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;background:var(--primary-light);border:1px solid var(--card-border);border-radius:10px;padding:10px}
+.delivery-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:#dcfce7;color:#16a34a;font-size:17px}
+.delivery-title{font-size:12.5px;font-weight:800;color:var(--text)}
+.delivery-copy{font-size:11px;color:var(--text2);margin-top:2px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(22,163,74,.35);transform:translateY(80px);opacity:0;transition:all .3s;z-index:300}
+.toast.show{transform:translateY(0);opacity:1}
+@media(max-width:1100px){.notice-layout{grid-template-columns:1fr}.notice-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}.stats-row{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.content{padding:18px 14px}.stats-row,.notice-grid{grid-template-columns:1fr}.topbar{padding:0 14px}.dark-btn{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo-area">
+      <div class="logo">
+        <div class="logo-icon"><i class="ti ti-school"></i></div>
+        <div><div class="logo-text">Zenfuture</div><div class="logo-sub">School Management</div></div>
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Main</div>
+      <a class="nav-item" href="dashboard.html"><i class="ti ti-layout-dashboard"></i>Dashboard</a>
+      <a class="nav-item" href="students.html"><i class="ti ti-users"></i>Students<span class="badge">1,284</span></a>
+      <a class="nav-item" href="teachers.html"><i class="ti ti-user-circle"></i>Teachers</a>
+      <a class="nav-item" href="attendance.html"><i class="ti ti-calendar-event"></i>Attendance</a>
+      <a class="nav-item" href="exams.html"><i class="ti ti-file-text"></i>Exams<span class="badge">3</span></a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Operations</div>
+      <a class="nav-item" href="fees.html"><i class="ti ti-credit-card"></i>Fees</a>
+      <a class="nav-item" href="transport.html"><i class="ti ti-bus"></i>Transport</a>
+      <a class="nav-item" href="hostel.html"><i class="ti ti-building-community"></i>Hostel</a>
+      <a class="nav-item" href="library.html"><i class="ti ti-books"></i>Library</a>
+      <a class="nav-item" href="payroll.html"><i class="ti ti-cash-banknote"></i>Payroll</a><a class="nav-item" href="expenses.html"><i class="ti ti-receipt-2"></i>Expenses</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Intelligence</div>
+      <a class="nav-item active" href="notices.html"><i class="ti ti-bell"></i>Notices<span class="badge">5</span></a>
+      <a class="nav-item" href="reports.html"><i class="ti ti-chart-bar"></i>Reports</a>
+      <a class="nav-item" href="ai-analytics.html"><i class="ti ti-brain"></i>AI Analytics</a>
+      <a class="nav-item" href="whatsapp-center.html"><i class="ti ti-brand-whatsapp"></i>WhatsApp Center</a>
+      <a class="nav-item" href="mobile-apps.html"><i class="ti ti-device-mobile"></i>Mobile Apps</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">System</div>
+      <a class="nav-item" href="modules.html"><i class="ti ti-layout-list"></i>Modules</a>
+      <a class="nav-item" href="settings.html"><i class="ti ti-settings"></i>Settings</a>
+      <a class="nav-item" href="#"><i class="ti ti-help-circle"></i>Help & Support</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="avatar-sm avatar">ZF</div>
+        <div><div class="user-name">Zenfuture</div><div class="user-role">Principal</div></div>
+        <i class="ti ti-dots-vertical" style="color:rgba(255,255,255,.3);font-size:16px;margin-left:auto"></i>
+      </div>
+    </div>
+  </aside>
+  <div class="main">
+    <nav class="topbar">
+      <div class="breadcrumb">
+        <a href="dashboard.html">Home</a>
+        <span><i class="ti ti-chevron-right" style="font-size:12px"></i></span>
+        <strong>Notices</strong>
+      </div>
+      <button class="dark-btn" onclick="toggleDark()"><i class="ti ti-moon"></i>Dark</button>
+      <div class="icon-btn"><i class="ti ti-message-circle" style="font-size:18px"></i></div>
+      <div class="icon-btn"><i class="ti ti-bell" style="font-size:18px"></i><span class="notif-dot"></span></div>
+      <div class="topbar-avatar">ZF</div>
+    </nav>
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Notice & Circular Center</div>
+          <div class="page-sub">Publish academic notices, emergency alerts, transport updates, fee reminders, events, holidays, and staff circulars.</div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="showToast('Draft templates refreshed')"><i class="ti ti-template"></i>Templates</button>
+          <button class="btn btn-primary" onclick="showToast('New notice composer ready')"><i class="ti ti-plus"></i>Create Notice</button>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon si-blue"><i class="ti ti-speakerphone"></i></div>
+          <div><div class="stat-num">42</div><div class="stat-label">Notices This Month</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-green"><i class="ti ti-brand-whatsapp"></i></div>
+          <div><div class="stat-num">98%</div><div class="stat-label">WhatsApp Delivery</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-amber"><i class="ti ti-clock"></i></div>
+          <div><div class="stat-num">6</div><div class="stat-label">Scheduled Notices</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-red"><i class="ti ti-alert-triangle"></i></div>
+          <div><div class="stat-num">3</div><div class="stat-label">Urgent Alerts</div></div>
+        </div>
+      </div>
+
+      <div class="category-tabs" id="categoryTabs">
+        <div class="category-tab active" onclick="selectCategory(this,'All')"><i class="ti ti-layout-grid"></i>All</div>
+        <div class="category-tab" onclick="selectCategory(this,'Academic')"><i class="ti ti-school"></i>Academic</div>
+        <div class="category-tab" onclick="selectCategory(this,'Emergency')"><i class="ti ti-alert-triangle"></i>Emergency</div>
+        <div class="category-tab" onclick="selectCategory(this,'Transport')"><i class="ti ti-bus"></i>Transport</div>
+        <div class="category-tab" onclick="selectCategory(this,'Fee')"><i class="ti ti-credit-card"></i>Fee</div>
+        <div class="category-tab" onclick="selectCategory(this,'Events')"><i class="ti ti-confetti"></i>Events</div>
+        <div class="category-tab" onclick="selectCategory(this,'Holiday')"><i class="ti ti-beach"></i>Holiday</div>
+        <div class="category-tab" onclick="selectCategory(this,'Staff')"><i class="ti ti-users-group"></i>Staff</div>
+      </div>
+
+      <div class="notice-layout">
+        <section class="panel glass">
+          <div class="panel-head">
+            <div class="panel-title"><i class="ti ti-bell-ringing"></i>Published & Scheduled Notices</div>
+            <div class="panel-note" id="noticeCount">Showing 7 notices</div>
+          </div>
+          <div class="notice-grid" id="noticeGrid"></div>
+        </section>
+
+        <aside class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><i class="ti ti-edit"></i>Quick Compose</div>
+            <div class="panel-note">Multi-channel</div>
+          </div>
+          <div class="compose-card">
+            <div class="form-row">
+              <label>Notice Type</label>
+              <select id="composeType">
+                <option>Academic</option>
+                <option>Emergency</option>
+                <option>Transport</option>
+                <option>Fee</option>
+                <option>Events</option>
+                <option>Holiday</option>
+                <option>Staff</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Title</label>
+              <input id="composeTitle" type="text" placeholder="e.g. Annual Sports Day Schedule"/>
+            </div>
+            <div class="form-row">
+              <label>Message</label>
+              <textarea id="composeMessage" placeholder="Write notice content for parents, students, or staff..."></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="sendNotice()"><i class="ti ti-send"></i>Send Notice</button>
+          </div>
+
+          <div class="panel-head" style="margin-top:18px">
+            <div class="panel-title"><i class="ti ti-device-mobile-message"></i>Delivery Channels</div>
+          </div>
+          <div class="delivery-list">
+            <div class="delivery-item">
+              <div class="delivery-icon"><i class="ti ti-brand-whatsapp"></i></div>
+              <div><div class="delivery-title">WhatsApp</div><div class="delivery-copy">Parents, staff, transport groups</div></div>
+              <span class="pill pill-green">Live</span>
+            </div>
+            <div class="delivery-item">
+              <div class="delivery-icon" style="background:#dbeafe;color:#1d4ed8"><i class="ti ti-mail"></i></div>
+              <div><div class="delivery-title">Email</div><div class="delivery-copy">Circulars and PDF attachments</div></div>
+              <span class="pill pill-blue">Ready</span>
+            </div>
+            <div class="delivery-item">
+              <div class="delivery-icon" style="background:var(--purple-bg);color:var(--purple)"><i class="ti ti-bell"></i></div>
+              <div><div class="delivery-title">App Push</div><div class="delivery-copy">Student and teacher mobile app</div></div>
+              <span class="pill pill-purple">Auto</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Purpose</th>
+                <th>Audience</th>
+                <th>Default Channel</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="typeTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast" id="toast"><i class="ti ti-circle-check"></i><span id="toastMsg">Action completed</span></div>
+<script>
+const NOTICE_TYPES=[
+  {type:'Academic',purpose:'Exams & schedules',audience:'Students and parents',channel:'WhatsApp + App',icon:'ti-school',status:'Active'},
+  {type:'Emergency',purpose:'Urgent alerts',audience:'All users',channel:'WhatsApp + SMS',icon:'ti-alert-triangle',status:'Priority'},
+  {type:'Transport',purpose:'Bus route updates',audience:'Route parents and drivers',channel:'WhatsApp',icon:'ti-bus',status:'Active'},
+  {type:'Fee',purpose:'Payment reminders',audience:'Parents',channel:'WhatsApp + Email',icon:'ti-credit-card',status:'Active'},
+  {type:'Events',purpose:'Annual day/sports',audience:'School community',channel:'App + Email',icon:'ti-confetti',status:'Scheduled'},
+  {type:'Holiday',purpose:'Vacation announcements',audience:'Students, parents, staff',channel:'WhatsApp + App',icon:'ti-beach',status:'Scheduled'},
+  {type:'Staff',purpose:'Internal circulars',audience:'Teachers and admin staff',channel:'Email + App',icon:'ti-users-group',status:'Internal'}
+];
+const NOTICES=[
+  {type:'Academic',title:'Term 1 Exam Timetable Published',copy:'Class VI to XII timetable is available in the student app with hall ticket instructions.',date:'Today - 09:20 AM',status:'Published',channels:['WhatsApp','App','Email']},
+  {type:'Emergency',title:'Heavy Rain Safety Alert',copy:'School buses will follow delayed routes. Parents will receive live route updates.',date:'Today - 07:10 AM',status:'Urgent',channels:['WhatsApp','SMS']},
+  {type:'Transport',title:'Route B Pickup Timing Updated',copy:'Morning pickup has shifted by 10 minutes from Monday for Route B and Route D.',date:'Yesterday - 05:40 PM',status:'Published',channels:['WhatsApp']},
+  {type:'Fee',title:'Quarterly Fee Payment Reminder',copy:'Pending payment reminders will be sent with secure payment links.',date:'12 May - 11:30 AM',status:'Scheduled',channels:['WhatsApp','Email']},
+  {type:'Events',title:'Annual Sports Day Registration',copy:'House-wise participation forms are open for students until Friday evening.',date:'10 May - 03:15 PM',status:'Published',channels:['App','Email']},
+  {type:'Holiday',title:'Summer Vacation Announcement',copy:'Vacation begins after the last working day. Reopening date will be shared soon.',date:'08 May - 01:00 PM',status:'Scheduled',channels:['WhatsApp','App']},
+  {type:'Staff',title:'Internal Staff Meeting Circular',copy:'All coordinators should attend the planning meeting in the conference room.',date:'07 May - 04:25 PM',status:'Internal',channels:['Email','App']}
+];
+let activeCategory='All';
+function iconClass(type){
+  const item=NOTICE_TYPES.find(n=>n.type===type);
+  return item ? item.icon : 'ti-bell';
+}
+function statusPill(status){
+  if(status==='Published'||status==='Active')return 'pill-green';
+  if(status==='Urgent'||status==='Priority')return 'pill-red';
+  if(status==='Scheduled')return 'pill-amber';
+  return 'pill-purple';
+}
+function selectCategory(el,type){
+  document.querySelectorAll('.category-tab').forEach(tab=>tab.classList.remove('active'));
+  el.classList.add('active');
+  activeCategory=type;
+  renderNotices();
+}
+function renderNotices(){
+  const list=activeCategory==='All'?NOTICES:NOTICES.filter(n=>n.type===activeCategory);
+  document.getElementById('noticeCount').textContent=`Showing ${list.length} notices`;
+  document.getElementById('noticeGrid').innerHTML=list.map(n=>`
+    <div class="notice-card">
+      <div class="notice-top">
+        <div class="notice-icon ${n.type.toLowerCase()}"><i class="ti ${iconClass(n.type)}"></i></div>
+        <div>
+          <div class="notice-title">${n.title}</div>
+          <div class="notice-meta">${n.type} - ${n.date}</div>
+        </div>
+      </div>
+      <div class="notice-copy">${n.copy}</div>
+      <div class="notice-actions">
+        <div class="channel-list">${n.channels.map(c=>`<span class="channel">${c}</span>`).join('')}</div>
+        <div class="mini-actions">
+          <button class="action-btn" title="Preview" onclick="showToast('${n.type} notice preview opened')"><i class="ti ti-eye"></i></button>
+          <button class="action-btn" title="Send" onclick="showToast('${n.type} notice sent')"><i class="ti ti-send"></i></button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+function renderTypes(){
+  document.getElementById('typeTable').innerHTML=NOTICE_TYPES.map(n=>`
+    <tr>
+      <td><div class="type-cell"><div class="mini-icon"><i class="ti ${n.icon}"></i></div>${n.type}</div></td>
+      <td style="color:var(--text2)">${n.purpose}</td>
+      <td>${n.audience}</td>
+      <td><span class="pill pill-gray">${n.channel}</span></td>
+      <td><span class="pill ${statusPill(n.status)}">${n.status}</span></td>
+    </tr>
+  `).join('');
+}
+function sendNotice(){
+  const type=document.getElementById('composeType').value;
+  const title=document.getElementById('composeTitle').value.trim() || type + ' notice';
+  showToast(title + ' sent via WhatsApp, app, and email');
+}
+function toggleDark(){document.body.classList.toggle('dark')}
+function showToast(msg){
+  const toast=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),2600);
+}
+renderNotices();
+renderTypes();
+</script>
+</body>
+</html>
+
+
+
+
+

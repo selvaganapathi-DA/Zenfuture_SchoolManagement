@@ -1,0 +1,397 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Attendance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;--sidebar:#1a2b6b;--sidebar-hover:rgba(255,255,255,.1);--sidebar-active:rgba(255,255,255,.18);
+  --card:#ffffffcc;--card-solid:#ffffff;--card-border:rgba(99,130,255,.15);
+  --primary:#2563eb;--primary-light:#eff4ff;--primary-hover:#1d4ed8;
+  --text:#1e2d60;--text2:#5a6ea0;--text3:#8fa0c8;
+  --green:#16a34a;--green-bg:#dcfce7;--amber:#d97706;--amber-bg:#fef3c7;
+  --red:#dc2626;--red-bg:#fee2e2;--purple:#7c3aed;--purple-bg:#ede9fe;
+  --shadow:0 2px 16px rgba(37,99,235,.08);--shadow-lg:0 8px 32px rgba(37,99,235,.13);
+  --radius:12px;--radius-sm:8px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--text);
+}
+body{background:var(--bg);min-height:100vh;transition:background .3s,color .3s}
+body.dark{
+  --bg:#0f1729;--sidebar:#0a1128;--card:#1e2d5ecc;--card-solid:#1e2d5e;
+  --card-border:rgba(99,130,255,.2);--primary-light:#1a2650;--text:#e2e8ff;
+  --text2:#8fa0c8;--text3:#4a5a88;--green-bg:#14532d55;--amber-bg:#78350f44;
+  --red-bg:#7f1d1d44;--purple-bg:#4c1d9544;--shadow:0 2px 16px rgba(0,0,0,.35);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.45);
+}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+.sidebar{background:var(--sidebar);display:flex;flex-direction:column;padding:0 0 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.logo-area{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:8px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#60a5fa,#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex-shrink:0}
+.logo-text{color:#fff;font-size:15px;font-weight:700;letter-spacing:-.3px}
+.logo-sub{color:rgba(255,255,255,.4);font-size:11px}
+.nav-section{padding:0 12px;margin-bottom:4px}
+.nav-label{color:rgba(255,255,255,.3);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:12px 8px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;transition:background .15s;color:rgba(255,255,255,.6);font-size:13px;font-weight:500;margin-bottom:1px;text-decoration:none}
+.nav-item:hover{background:var(--sidebar-hover);color:#fff}
+.nav-item.active{background:var(--sidebar-active);color:#fff}
+.nav-item i{font-size:17px;width:20px;text-align:center}
+.badge{background:rgba(96,165,250,.25);color:#93c5fd;font-size:10px;font-weight:700;padding:2px 6px;border-radius:20px;margin-left:auto}
+.sidebar-footer{margin-top:auto;padding:12px}
+.user-card{background:rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.avatar-sm{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700;flex-shrink:0}
+.user-name{color:#fff;font-size:13px;font-weight:600}
+.user-role{color:rgba(255,255,255,.4);font-size:11px}
+.main{display:flex;flex-direction:column;min-height:100vh;overflow:hidden}
+.topbar{background:var(--card);border-bottom:1px solid var(--card-border);padding:0 24px;height:60px;display:flex;align-items:center;gap:14px;backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;margin-right:auto}
+.breadcrumb a{color:var(--text2);text-decoration:none;font-weight:500}
+.breadcrumb a:hover{color:var(--primary)}
+.breadcrumb span{color:var(--text3)}
+.breadcrumb strong{color:var(--text);font-weight:600}
+.icon-btn{width:36px;height:36px;border-radius:9px;background:var(--primary-light);border:1px solid var(--card-border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);position:relative;transition:background .15s;flex-shrink:0}
+.icon-btn:hover{background:var(--card-border)}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:#ef4444;border:2px solid var(--bg)}
+.topbar-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700;cursor:pointer;flex-shrink:0}
+.dark-btn{background:var(--primary-light);border:1px solid var(--card-border);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;font-family:inherit;margin-left:auto}
+.dark-btn:hover{background:var(--card-border)}
+.content{padding:22px 24px;display:flex;flex-direction:column;gap:18px}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.page-title{font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.5px}
+.page-sub{font-size:13px;color:var(--text2);margin-top:3px}
+.placeholder-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:40px 24px;backdrop-filter:blur(12px);box-shadow:var(--shadow);text-align:center;color:var(--text2);margin-top:20px}
+.placeholder-card i{font-size:48px;color:var(--text3);margin-bottom:12px;display:block}
+.placeholder-card h2{font-size:18px;color:var(--text);margin-bottom:8px}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 15px;border-radius:9px;border:0;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .16s}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:0 8px 20px rgba(37,99,235,.22)}
+.btn-outline{background:var(--card-solid);color:var(--text2);border:1px solid var(--card-border)}
+.btn-outline:hover{color:var(--primary);background:var(--primary-light);border-color:var(--primary)}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);backdrop-filter:blur(12px);display:flex;align-items:center;gap:14px;transition:transform .2s,box-shadow .2s}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.stat-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+.si-blue{background:#dbeafe;color:#1d4ed8}.si-green{background:var(--green-bg);color:var(--green)}.si-amber{background:var(--amber-bg);color:var(--amber)}.si-red{background:var(--red-bg);color:var(--red)}.si-purple{background:var(--purple-bg);color:var(--purple)}
+.stat-num{font-size:22px;font-weight:800;letter-spacing:-.8px;color:var(--text)}
+.stat-label{font-size:12px;color:var(--text2);font-weight:600;margin-top:2px}
+.ai-badge{background:linear-gradient(135deg,#7c3aed,#ec4899);color:#fff;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.module-tabs{display:flex;gap:6px;overflow-x:auto;background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:8px;box-shadow:var(--shadow);backdrop-filter:blur(12px)}
+.module-tab{display:flex;align-items:center;gap:7px;white-space:nowrap;padding:8px 12px;border-radius:9px;color:var(--text2);font-size:12px;font-weight:800;cursor:pointer;transition:all .16s}
+.module-tab:hover{background:var(--primary-light);color:var(--text)}
+.module-tab.active{background:var(--primary);color:#fff;box-shadow:0 8px 18px rgba(37,99,235,.2)}
+.dashboard-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
+.panel{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);backdrop-filter:blur(12px);position:relative;overflow:hidden}
+.panel.glass{background:linear-gradient(145deg,rgba(255,255,255,.86),rgba(255,255,255,.58));backdrop-filter:blur(16px)}
+body.dark .panel.glass{background:linear-gradient(145deg,rgba(30,45,94,.9),rgba(30,45,94,.58))}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.panel-title{font-size:14px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:7px}
+.panel-note{font-size:11px;color:var(--text3);font-weight:700}
+.route-map{height:258px;border-radius:12px;background:linear-gradient(135deg,rgba(37,99,235,.11),rgba(124,58,237,.11));border:1px solid var(--card-border);position:relative;overflow:hidden}
+.route-line{position:absolute;left:48px;right:48px;top:130px;height:4px;border-radius:20px;background:linear-gradient(90deg,#2563eb,#22c55e,#f59e0b)}
+.route-dot{position:absolute;width:15px;height:15px;border-radius:50%;background:#fff;border:4px solid var(--primary);box-shadow:0 0 0 7px rgba(37,99,235,.12)}
+.route-dot.d1{left:44px;top:124px}.route-dot.d2{left:34%;top:124px;border-color:#22c55e}.route-dot.d3{right:31%;top:124px;border-color:#f59e0b}.route-dot.d4{right:42px;top:124px;border-color:#7c3aed}
+.bus-marker{position:absolute;left:54%;top:96px;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border-radius:12px;padding:9px 11px;font-size:12px;font-weight:800;display:flex;align-items:center;gap:6px;box-shadow:0 12px 28px rgba(37,99,235,.25);animation:floatBus 3s ease-in-out infinite}
+@keyframes floatBus{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.map-chip{position:absolute;background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.6);border-radius:10px;padding:8px 10px;font-size:11px;font-weight:800;color:var(--text);box-shadow:0 8px 22px rgba(37,99,235,.12);backdrop-filter:blur(12px)}
+body.dark .map-chip{background:rgba(30,45,94,.76);border-color:rgba(99,130,255,.28)}
+.map-chip.c1{left:16px;top:16px}.map-chip.c2{right:16px;bottom:16px}.map-chip.c3{left:16px;bottom:16px}
+.feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.feature-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);backdrop-filter:blur(12px);transition:transform .2s,box-shadow .2s}
+.feature-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.feature-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;color:#fff;margin-bottom:10px;background:linear-gradient(135deg,#2563eb,#7c3aed)}
+.feature-icon.green{background:linear-gradient(135deg,#22c55e,#16a34a)}.feature-icon.amber{background:linear-gradient(135deg,#f59e0b,#d97706)}.feature-icon.red{background:linear-gradient(135deg,#ef4444,#dc2626)}.feature-icon.ai{background:linear-gradient(135deg,#7c3aed,#ec4899);box-shadow:0 0 22px rgba(236,72,153,.2)}
+.feature-title{font-size:13px;font-weight:800;color:var(--text)}
+.feature-copy{font-size:11.5px;line-height:1.55;color:var(--text2);margin-top:5px}
+.mini-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+.tag{background:var(--primary-light);border:1px solid var(--card-border);border-radius:999px;color:var(--text2);font-size:10px;font-weight:800;padding:3px 7px}
+.timeline{display:flex;flex-direction:column;gap:10px}
+.timeline-item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;background:var(--primary-light);border:1px solid var(--card-border);border-radius:10px;padding:10px}
+.time-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#dbeafe;color:#1d4ed8;font-size:18px}
+.time-title{font-size:12.5px;font-weight:800;color:var(--text)}
+.time-meta{font-size:11px;color:var(--text2);margin-top:2px}
+.pill{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:800;white-space:nowrap}
+.pill-green{background:var(--green-bg);color:var(--green)}.pill-amber{background:var(--amber-bg);color:var(--amber)}.pill-red{background:var(--red-bg);color:var(--red)}.pill-blue{background:#dbeafe;color:#1d4ed8}.pill-purple{background:var(--purple-bg);color:var(--purple)}.pill-gray{background:rgba(99,130,255,.1);color:var(--text2)}
+.progress-list{display:flex;flex-direction:column;gap:12px}
+.progress-row{display:grid;grid-template-columns:100px 1fr 42px;align-items:center;gap:10px}
+.progress-label{font-size:12px;font-weight:800;color:var(--text)}
+.progress-track{height:9px;background:var(--primary-light);border-radius:999px;overflow:hidden;border:1px solid var(--card-border)}
+.progress-fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,#2563eb,#22c55e)}
+.progress-val{font-size:12px;font-weight:800;color:var(--text2);text-align:right}
+.alert-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.alert-card{background:linear-gradient(145deg,var(--card),var(--primary-light));border:1px solid var(--card-border);border-radius:var(--radius);padding:13px;display:flex;gap:10px;align-items:flex-start}
+.alert-card i{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:#dcfce7;color:#16a34a;font-size:17px;flex-shrink:0}
+.alert-title{font-size:12.5px;font-weight:800;color:var(--text)}
+.alert-copy{font-size:11px;color:var(--text2);line-height:1.45;margin-top:3px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(22,163,74,.35);transform:translateY(80px);opacity:0;transition:all .3s;z-index:300}
+.toast.show{transform:translateY(0);opacity:1}
+@media(max-width:1100px){.dashboard-grid{grid-template-columns:1fr}.feature-grid{grid-template-columns:repeat(2,1fr)}.alert-strip{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}.stats-row{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.content{padding:18px 14px}.stats-row,.feature-grid,.alert-strip{grid-template-columns:1fr}.progress-row{grid-template-columns:86px 1fr 38px}.topbar{padding:0 14px}.dark-btn{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo-area">
+      <div class="logo">
+        <div class="logo-icon"><i class="ti ti-school"></i></div>
+        <div><div class="logo-text">Zenfuture</div><div class="logo-sub">School Management</div></div>
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Main</div>
+      <a class="nav-item" href="dashboard.html"><i class="ti ti-layout-dashboard"></i>Dashboard</a>
+      <a class="nav-item" href="students.html"><i class="ti ti-users"></i>Students<span class="badge">1,284</span></a>
+      <a class="nav-item" href="teachers.html"><i class="ti ti-user-circle"></i>Teachers</a>
+      <a class="nav-item active" href="attendance.html"><i class="ti ti-calendar-event"></i>Attendance</a>
+      <a class="nav-item" href="exams.html"><i class="ti ti-file-text"></i>Exams<span class="badge">3</span></a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Operations</div>
+      <a class="nav-item" href="fees.html"><i class="ti ti-credit-card"></i>Fees</a>
+      <a class="nav-item" href="transport.html"><i class="ti ti-bus"></i>Transport</a>
+      <a class="nav-item" href="hostel.html"><i class="ti ti-building-community"></i>Hostel</a>
+      <a class="nav-item" href="library.html"><i class="ti ti-books"></i>Library</a>
+      <a class="nav-item" href="payroll.html"><i class="ti ti-cash-banknote"></i>Payroll</a><a class="nav-item" href="expenses.html"><i class="ti ti-receipt-2"></i>Expenses</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Intelligence</div>
+      <a class="nav-item" href="notices.html"><i class="ti ti-bell"></i>Notices<span class="badge">5</span></a>
+      <a class="nav-item" href="reports.html"><i class="ti ti-chart-bar"></i>Reports</a>
+      <a class="nav-item" href="ai-analytics.html"><i class="ti ti-brain"></i>AI Analytics</a>
+      <a class="nav-item" href="whatsapp-center.html"><i class="ti ti-brand-whatsapp"></i>WhatsApp Center</a>
+      <a class="nav-item" href="mobile-apps.html"><i class="ti ti-device-mobile"></i>Mobile Apps</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">System</div>
+      <a class="nav-item" href="modules.html"><i class="ti ti-layout-list"></i>Modules</a>
+      <a class="nav-item" href="settings.html"><i class="ti ti-settings"></i>Settings</a>
+      <a class="nav-item" href="#"><i class="ti ti-help-circle"></i>Help & Support</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="avatar-sm avatar">ZF</div>
+        <div><div class="user-name">Zenfuture</div><div class="user-role">Principal</div></div>
+        <i class="ti ti-dots-vertical" style="color:rgba(255,255,255,.3);font-size:16px;margin-left:auto"></i>
+      </div>
+    </div>
+  </aside>
+  <div class="main">
+    <nav class="topbar">
+      <div class="breadcrumb">
+        <a href="dashboard.html">Home</a>
+        <span><i class="ti ti-chevron-right" style="font-size:12px"></i></span>
+        <strong>Attendance</strong>
+      </div>
+      <button class="dark-btn" onclick="toggleDark()"><i class="ti ti-moon"></i>Dark</button>
+      <div class="icon-btn"><i class="ti ti-message-circle" style="font-size:18px"></i></div>
+      <div class="icon-btn"><i class="ti ti-bell" style="font-size:18px"></i><span class="notif-dot"></span></div>
+      <div class="topbar-avatar">ZF</div>
+    </nav>
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Attendance Command Center</div>
+          <div class="page-sub">Manage students, teachers, admin staff, transport teams, security, leave, GPS, biometric logs, and payroll sync.</div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="showToast('AI attendance analytics refreshed')"><i class="ti ti-brain"></i>AI Analytics</button>
+          <button class="btn btn-primary" onclick="showToast('Biometric sync started')"><i class="ti ti-fingerprint"></i>Sync Biometric</button>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon si-green"><i class="ti ti-users"></i></div>
+          <div><div class="stat-num">94.8%</div><div class="stat-label">Students Present Today</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-blue"><i class="ti ti-user-check"></i></div>
+          <div><div class="stat-num">118</div><div class="stat-label">Teachers & Staff Checked In</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-amber"><i class="ti ti-bus"></i></div>
+          <div><div class="stat-num">22</div><div class="stat-label">Routes Live <span class="ai-badge">GPS</span></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-red"><i class="ti ti-alert-triangle"></i></div>
+          <div><div class="stat-num">17</div><div class="stat-label">Late / Absent Alerts</div></div>
+        </div>
+      </div>
+
+      <div class="module-tabs" id="moduleTabs">
+        <div class="module-tab active" onclick="selectModule(this,'Students')"><i class="ti ti-school"></i>Students Attendance</div>
+        <div class="module-tab" onclick="selectModule(this,'Teachers')"><i class="ti ti-chalkboard"></i>Teachers Attendance</div>
+        <div class="module-tab" onclick="selectModule(this,'Admin')"><i class="ti ti-briefcase"></i>Admin Staff</div>
+        <div class="module-tab" onclick="selectModule(this,'Transport')"><i class="ti ti-bus"></i>Transport Staff</div>
+        <div class="module-tab" onclick="selectModule(this,'Drivers')"><i class="ti ti-steering-wheel"></i>Drivers Tracking</div>
+        <div class="module-tab" onclick="selectModule(this,'Security')"><i class="ti ti-shield-check"></i>Security</div>
+        <div class="module-tab" onclick="selectModule(this,'Leave')"><i class="ti ti-calendar-minus"></i>Leave</div>
+        <div class="module-tab" onclick="selectModule(this,'Payroll')"><i class="ti ti-cash"></i>Payroll Sync</div>
+      </div>
+
+      <div class="dashboard-grid">
+        <section class="panel glass">
+          <div class="panel-head">
+            <div class="panel-title"><i class="ti ti-map-2"></i>Live GPS & Transport Attendance</div>
+            <div class="panel-note">Drivers, bus attenders, routes, fuel, and trips</div>
+          </div>
+          <div class="route-map">
+            <div class="route-line"></div>
+            <div class="route-dot d1"></div>
+            <div class="route-dot d2"></div>
+            <div class="route-dot d3"></div>
+            <div class="route-dot d4"></div>
+            <div class="bus-marker"><i class="ti ti-bus"></i>Bus 12 - Route A</div>
+            <div class="map-chip c1">28 students boarded</div>
+            <div class="map-chip c2">Fuel efficiency 8.4 km/l</div>
+            <div class="map-chip c3">ETA Gate 2: 08:12 AM</div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><i class="ti ti-activity"></i>Today Live Activity</div>
+            <div class="panel-note">Auto updates</div>
+          </div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="time-icon"><i class="ti ti-brand-whatsapp"></i></div>
+              <div><div class="time-title">Parent absent alerts sent</div><div class="time-meta">Class X-A - 6 students - 08:45 AM</div></div>
+              <span class="pill pill-green">Sent</span>
+            </div>
+            <div class="timeline-item">
+              <div class="time-icon"><i class="ti ti-clock-exclamation"></i></div>
+              <div><div class="time-title">Teacher late alert</div><div class="time-meta">Physics faculty - 14 mins late</div></div>
+              <span class="pill pill-amber">Review</span>
+            </div>
+            <div class="timeline-item">
+              <div class="time-icon"><i class="ti ti-shield"></i></div>
+              <div><div class="time-title">Security patrol route complete</div><div class="time-meta">Night log synced with Gate 1 scan</div></div>
+              <span class="pill pill-blue">Logged</span>
+            </div>
+            <div class="timeline-item">
+              <div class="time-icon"><i class="ti ti-cash"></i></div>
+              <div><div class="time-title">Payroll attendance ready</div><div class="time-meta">Working hours, overtime, late deductions</div></div>
+              <span class="pill pill-purple">Sync</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon green"><i class="ti ti-user-heart"></i></div>
+          <div class="feature-title">Smart Student Attendance</div>
+          <div class="feature-copy">Parent WhatsApp alerts, monthly reports, face recognition, and smart classroom tracking.</div>
+          <div class="mini-tags"><span class="tag">Face ID</span><span class="tag">Reports</span><span class="tag">Parents</span></div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="ti ti-chalkboard"></i></div>
+          <div class="feature-title">Smart Faculty Features</div>
+          <div class="feature-copy">Teacher dashboard, period attendance, class timing, leave requests, and AI punctuality score.</div>
+          <div class="mini-tags"><span class="tag">Periods</span><span class="tag">Leave</span><span class="tag">AI Score</span></div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon amber"><i class="ti ti-briefcase"></i></div>
+          <div class="feature-title">Administration Staff</div>
+          <div class="feature-copy">Shift attendance, working hours, payroll sync, late reports, and overtime tracking.</div>
+          <div class="mini-tags"><span class="tag">Shifts</span><span class="tag">Overtime</span><span class="tag">Payroll</span></div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon red"><i class="ti ti-shield-lock"></i></div>
+          <div class="feature-title">Security Staff Tracking</div>
+          <div class="feature-copy">Gate check-in, patrol routes, night shift logs, visitor checkpoints, and AI risk alerts.</div>
+          <div class="mini-tags"><span class="tag">Gate</span><span class="tag">Patrol</span><span class="tag">Risk</span></div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <section class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><i class="ti ti-chart-bar"></i>AI Analytics & Shift Health</div>
+            <div class="panel-note">Attendance quality by department</div>
+          </div>
+          <div class="progress-list">
+            <div class="progress-row"><div class="progress-label">Students</div><div class="progress-track"><div class="progress-fill" style="width:95%"></div></div><div class="progress-val">95%</div></div>
+            <div class="progress-row"><div class="progress-label">Teachers</div><div class="progress-track"><div class="progress-fill" style="width:91%;background:linear-gradient(90deg,#2563eb,#7c3aed)"></div></div><div class="progress-val">91%</div></div>
+            <div class="progress-row"><div class="progress-label">Admin</div><div class="progress-track"><div class="progress-fill" style="width:88%;background:linear-gradient(90deg,#f59e0b,#22c55e)"></div></div><div class="progress-val">88%</div></div>
+            <div class="progress-row"><div class="progress-label">Transport</div><div class="progress-track"><div class="progress-fill" style="width:97%;background:linear-gradient(90deg,#0ea5e9,#22c55e)"></div></div><div class="progress-val">97%</div></div>
+            <div class="progress-row"><div class="progress-label">Security</div><div class="progress-track"><div class="progress-fill" style="width:84%;background:linear-gradient(90deg,#ef4444,#f59e0b)"></div></div><div class="progress-val">84%</div></div>
+          </div>
+        </section>
+
+        <section class="panel glass">
+          <div class="panel-head">
+            <div class="panel-title"><i class="ti ti-cash-banknote"></i>Payroll Integration</div>
+            <div class="panel-note">Salary sync preview</div>
+          </div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="time-icon"><i class="ti ti-clock-hour-4"></i></div>
+              <div><div class="time-title">Working hours calculated</div><div class="time-meta">Teachers, admin, security, drivers</div></div>
+              <span class="pill pill-green">Done</span>
+            </div>
+            <div class="timeline-item">
+              <div class="time-icon"><i class="ti ti-plus-minus"></i></div>
+              <div><div class="time-title">Overtime and late deductions</div><div class="time-meta">42 overtime entries - 11 late deductions</div></div>
+              <span class="pill pill-amber">Check</span>
+            </div>
+            <div class="timeline-item">
+              <div class="time-icon"><i class="ti ti-refresh"></i></div>
+              <div><div class="time-title">Attendance-based payroll sync</div><div class="time-meta">Ready for salary register export</div></div>
+              <span class="pill pill-purple">Ready</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="alert-strip">
+        <div class="alert-card">
+          <i class="ti ti-brand-whatsapp"></i>
+          <div><div class="alert-title">Student Absent Alert</div><div class="alert-copy">Auto message to parents when morning attendance closes.</div></div>
+        </div>
+        <div class="alert-card">
+          <i class="ti ti-clock-exclamation" style="background:var(--amber-bg);color:var(--amber)"></i>
+          <div><div class="alert-title">Teacher Late Alert</div><div class="alert-copy">Notify coordinator and update punctuality score.</div></div>
+        </div>
+        <div class="alert-card">
+          <i class="ti ti-route" style="background:#dbeafe;color:#1d4ed8"></i>
+          <div><div class="alert-title">Driver Route Updates</div><div class="alert-copy">Share trip start, delay, and drop status with parents.</div></div>
+        </div>
+        <div class="alert-card">
+          <i class="ti ti-calendar-time" style="background:var(--purple-bg);color:var(--purple)"></i>
+          <div><div class="alert-title">Staff Shift Reminder</div><div class="alert-copy">Send WhatsApp reminder before shift start and night duty.</div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<div class="toast" id="toast"><i class="ti ti-circle-check"></i><span id="toastMsg">Action completed</span></div>
+<script>
+function toggleDark(){document.body.classList.toggle('dark')}
+function selectModule(el,name){
+  document.querySelectorAll('.module-tab').forEach(tab=>tab.classList.remove('active'));
+  el.classList.add('active');
+  showToast(name + ' module opened');
+}
+function showToast(msg){
+  const toast=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),2600);
+}
+</script>
+</body>
+</html>
+
+
+
+
+
