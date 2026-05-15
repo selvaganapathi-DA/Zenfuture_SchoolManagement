@@ -152,7 +152,8 @@
       <a class="nav-item" href="transport.html"><i class="ti ti-bus"></i>Transport</a>
       <a class="nav-item" href="hostel.html"><i class="ti ti-building-community"></i>Hostel</a>
       <a class="nav-item" href="library.html"><i class="ti ti-books"></i>Library</a>
-      <!-- <a class="nav-item" href="payroll.html"><i class="ti ti-cash-banknote"></i>Payroll</a><a class="nav-item" href="expenses.html"><i class="ti ti-receipt-2"></i>Expenses</a> -->
+      <!-- <a class="nav-item" href="payroll.html"><i class="ti ti-cash-banknote"></i>Payroll</a> -->
+      <a class="nav-item" href="expenses.html"><i class="ti ti-receipt-2"></i>Expenses</a>
     </div>
     <div class="nav-section">
       <div class="nav-label">Intelligence</div>
@@ -192,7 +193,8 @@
     <div class="content">
       <div class="page-header">
         <div><div class="page-title">Good morning</div><div class="page-sub">Here's what's happening at Zenfuture School today.</div></div>
-        <div class="date-badge"><i class="ti ti-calendar" aria-hidden="true"></i>Friday, 12 May 2026</div>
+        <div class="date-badge"  id="liveDate"><i class="ti ti-calendar" aria-hidden="true"></i>Loading Date...
+</div>
       </div>
 
       <div class="stats-grid">
@@ -416,6 +418,23 @@ new Chart(document.getElementById('attChart'),{
   },
   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#8fa0c8',font:{size:11}}},y:{grid:{color:'rgba(99,130,255,.08)'},ticks:{color:'#8fa0c8',font:{size:11}},min:80,max:100}}}
 });
+  function updateLiveDate() {
+    const today = new Date();
+
+    const options = {
+      weekday: 'long',
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    };
+
+    const formattedDate = today.toLocaleDateString('en-GB', options);
+
+    document.getElementById('liveDate').innerHTML =
+      `<i class="ti ti-calendar" aria-hidden="true"></i> ${formattedDate}`;
+  }
+
+  updateLiveDate();
 </script>
 </body>
 </html>
